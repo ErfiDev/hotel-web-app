@@ -11,7 +11,7 @@ func main() {
 
 	muxServer.HandleFunc("/" , controllers.Home)
 	muxServer.HandleFunc("/about" , controllers.About)
-	muxServer.Handle("/public" , http.FileServer(http.Dir("./public")))
+	muxServer.Handle("/public/" , http.StripPrefix("/public/" , http.FileServer(http.Dir("./public"))))
 
 	err := http.ListenAndServe(":3000" , muxServer)
 	if err != nil {
