@@ -7,6 +7,7 @@ import (
 	"github.com/erfidev/hotel-web-app/utils"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -22,6 +23,22 @@ func main() {
 	appConfig := config.AppConfig{}
 	appConfig.TemplatesCache = tmpCache
 
+	if len(os.Args) > 1 {
+		secondArgs := os.Args[1]
+		switch secondArgs {
+		case "development":
+			appConfig.Development = true
+
+		case "production":
+			appConfig.Development = false
+
+		default:
+			appConfig.Development = true
+		}
+	} else {
+		appConfig.Development = true
+	}
+
 	// Send to the getAppConfig package
 	utils.GetAppConfig(&appConfig)
 
@@ -33,5 +50,7 @@ func main() {
 	err := http.ListenAndServe(":3000" , muxServer)
 	if err != nil {
 		fmt.Println("we have the fucking error on starting server")
+		return
 	}
+	fmt.Println("run on :3000 port")
 }

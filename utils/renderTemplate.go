@@ -17,14 +17,24 @@ func GetAppConfig(a *config.AppConfig) {
 }
 
 func RenderTemplate(w http.ResponseWriter , tmpl string , data interface{}) {
-	caches := appConfig.TemplatesCache
+	if appConfig.Development {
+		tmpCache , _ := CreateTemplateCache()
+		tmp , ok := tmpCache[tmpl]
+		if !ok {
+			log.Fatal("we can't find the template")
+		}
 
-	findTmp , isOk := caches[tmpl]
-	if !isOk{
-		log.Fatal("not found template")
+		tmp.Execute(w , data)
+	} else {
+		caches := appConfig.TemplatesCache
+
+		findTmp , isOk := caches[tmpl]
+		if !isOk{
+			log.Fatal("not found template")
+		}
+
+		findTmp.Execute(w , data)
 	}
-
-	findTmp.Execute(w , data)
 }
 
 func CreateTemplateCache() (map[string]*template.Template , error) {
