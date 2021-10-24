@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/erfidev/hotel-web-app/config"
 	"html/template"
 	"log"
 	"net/http"
@@ -9,11 +10,14 @@ import (
 
 var funcMap = template.FuncMap{}
 
+var appConfig *config.AppConfig
+
+func GetAppConfig(a *config.AppConfig) {
+	appConfig = a
+}
+
 func RenderTemplate(w http.ResponseWriter , tmpl string , data interface{}) {
-	caches , err := CreateTemplateCache()
-	if err != nil {
-		log.Fatal(err)
-	}
+	caches := appConfig.TemplatesCache
 
 	findTmp , isOk := caches[tmpl]
 	if !isOk{
@@ -37,9 +41,9 @@ func CreateTemplateCache() (map[string]*template.Template , error) {
 		name := filepath.Base(page)
 		// [about.page.gohtml]
 
-		tmp , err := template.New(name).Funcs(funcMap).ParseFiles(page)
-		if err !=  nil {
-			return caches , err
+		tmp , errNewTmp := template.New(name).Funcs(funcMap).ParseFiles(page)
+		if errNewTmp !=  nil {
+			return caches , errNewTmp
 		}
 
 		findLayout , _ := filepath.Glob("./views/*.layout.gohtml")
