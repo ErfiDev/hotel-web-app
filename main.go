@@ -25,15 +25,8 @@ func main() {
 
 	if len(os.Args) > 1 {
 		secondArgs := os.Args[1]
-		switch secondArgs {
-		case "development":
-			appConfig.Development = true
-
-		case "production":
+		if secondArgs == "production" {
 			appConfig.Development = false
-
-		default:
-			appConfig.Development = true
 		}
 	} else {
 		appConfig.Development = true
@@ -41,10 +34,11 @@ func main() {
 
 	// Send to the getAppConfig package
 	utils.GetAppConfig(&appConfig)
+	controllers.SetRepo(controllers.NewRepository(&appConfig))
 
 
-	muxServer.HandleFunc("/" , controllers.Home)
-	muxServer.HandleFunc("/about" , controllers.About)
+	muxServer.HandleFunc("/" , controllers.Repo.Home)
+	muxServer.HandleFunc("/about" , controllers.Repo.About)
 	muxServer.Handle("/public/" , http.StripPrefix("/public/" , http.FileServer(http.Dir("./public"))))
 
 	err := http.ListenAndServe(":3000" , muxServer)
