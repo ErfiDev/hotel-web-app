@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/utils"
 	"net/http"
 )
 
-type data struct{
-	Head string
+type TemplateData struct{
+	Title string
+	Auth bool
+	Username string
 }
 
 var Repo *Repository
@@ -28,11 +29,17 @@ func SetRepo(rep *Repository){
 }
 
 func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
-	utils.RenderTemplate(res , "main.page.gohtml" , data{"home"})
-	fmt.Println(Repo.App)
-
+	utils.RenderTemplate(res , "main.page.gohtml" , TemplateData{
+		"Home page /",
+		false,
+		"",
+	})
 }
 
 func (r Repository) About(res http.ResponseWriter, req *http.Request) {
-	utils.RenderTemplate(res , "about.page.gohtml" , data{"fuck"})
+	utils.RenderTemplate(res , "about.page.gohtml" , TemplateData{
+		"About page /about",
+		false,
+		"",
+	})
 }
