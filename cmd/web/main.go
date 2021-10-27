@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/controllers"
+	"github.com/erfidev/hotel-web-app/routes"
 	"github.com/erfidev/hotel-web-app/utils"
 	"log"
 	"net/http"
@@ -11,8 +11,6 @@ import (
 )
 
 func main() {
-	muxServer := http.NewServeMux()
-
 	// create template caches
 	tmpCache , errCache := utils.CreateTemplateCache()
 	if errCache != nil {
@@ -36,15 +34,15 @@ func main() {
 	utils.GetAppConfig(&appConfig)
 	controllers.SetRepo(controllers.NewRepository(&appConfig))
 
-
-	muxServer.HandleFunc("/" , controllers.Repo.Home)
-	muxServer.HandleFunc("/about" , controllers.Repo.About)
-	muxServer.Handle("/public/" , http.StripPrefix("/public/" , http.FileServer(http.Dir("./public"))))
-
-	err := http.ListenAndServe(":3000" , muxServer)
-	if err != nil {
-		fmt.Println("we have the fucking error on starting server")
-		return
+	// server initializing
+	routeHandler := routes.Routes(&appConfig)
+	webServer := &http.Server{
+		Addr: ":3000",
+		Handler: routeHandler,
 	}
-	fmt.Println("run on :3000 port")
+
+	err := webServer.ListenAndServe()
+	if err != nil {
+		log.Fatal("error on ListenAndServe")
+	}
 }
