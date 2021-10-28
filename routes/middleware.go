@@ -5,12 +5,9 @@ import (
 	"net/http"
 )
 
-func YourMiddleware(handler http.HandlerFunc) http.HandlerFunc {
-	return func (res http.ResponseWriter , req *http.Request) {
-		fmt.Println(req.URL)
-		fmt.Println(req.Cookies())
-		fmt.Println(req.Method)
-
+func YourMiddleware(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(res http.ResponseWriter , req *http.Request) {
+		fmt.Println("middleware working")
 		handler.ServeHTTP(res , req)
-	}
+	})
 }
