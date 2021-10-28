@@ -5,7 +5,7 @@ type TmpData struct{
 	IntMap map[string]int
 	Float64Map map[string]float64
 	CSRF string
-	Data map[string]interface{}
+	Data map[string]string
 	Error string
 	Warning string
 	Flash string

@@ -3,15 +3,10 @@ package controllers
 import (
 	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
+	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/utils"
 	"net/http"
 )
-
-type TemplateData struct{
-	Title string
-	Auth bool
-	Username string
-}
 
 var Repo *Repository
 
@@ -30,19 +25,22 @@ func SetRepo(rep *Repository){
 }
 
 func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
-	utils.RenderTemplate(res , "main.page.gohtml" , TemplateData{
-		"Home page /",
-		false,
-		"",
+	data := map[string]string{
+		"erfan": "hanifezade",
+		"title": "home page",
+	}
+	utils.RenderTemplate(res , "main.page.gohtml" , models.TmpData{
+		Data: data,
 	})
 	fmt.Println(req.Cookies())
 }
 
 func (r Repository) About(res http.ResponseWriter, req *http.Request) {
-	utils.RenderTemplate(res , "about.page.gohtml" , TemplateData{
-		"About page /about",
-		false,
-		"",
+	utils.RenderTemplate(res , "about.page.gohtml" , models.TmpData{
+		Data: map[string]string{
+			"about erfan": "erfanhanifezade",
+			"title": "about page",
+		},
 	})
 }
 
