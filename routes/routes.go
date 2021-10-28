@@ -12,6 +12,7 @@ func Routes(app *config.AppConfig) http.Handler {
 	server.HandleFunc("/" , controllers.Repo.Home)
 	server.HandleFunc("/about" , controllers.Repo.About)
 	server.Handle("/public/" , http.StripPrefix("/public/" , http.FileServer(http.Dir("./public"))))
+	server.HandleFunc("/middleware" , YourMiddleware(controllers.Repo.Middleware))
 
 	return server
 }

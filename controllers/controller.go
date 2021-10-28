@@ -43,3 +43,7 @@ func (r Repository) About(res http.ResponseWriter, req *http.Request) {
 		"",
 	})
 }
+
+func (r Repository) Middleware(res http.ResponseWriter , req *http.Request) {
+	utils.RenderTemplate(res , "about.page.gohtml" , nil)
+}
