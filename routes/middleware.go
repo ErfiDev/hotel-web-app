@@ -1,13 +1,20 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 )
 
-func YourMiddleware(handler http.Handler) http.Handler {
+func UserCheckMiddleware(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter , req *http.Request) {
-		fmt.Println("middleware working")
-		handler.ServeHTTP(res , req)
+		mtd := req.Method
+		if mtd == "GET" {
+			req.AddCookie(&http.Cookie{
+				Name: "erfan",
+				Value: "fuckedup",
+			})
+			handler.ServeHTTP(res , req)
+		} else {
+			handler.ServeHTTP(res , req)
+		}
 	})
 }

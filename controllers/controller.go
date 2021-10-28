@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/utils"
 	"net/http"
@@ -34,6 +35,7 @@ func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
 		false,
 		"",
 	})
+	fmt.Println(req.Cookies())
 }
 
 func (r Repository) About(res http.ResponseWriter, req *http.Request) {
