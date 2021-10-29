@@ -17,3 +17,7 @@ func NoSurf(next http.Handler) http.Handler {
 
 	return CSRFHandler
 }
+
+func ServeSession(next http.Handler) http.Handler {
+	return appConfig.Session.LoadAndSave(next)
+}

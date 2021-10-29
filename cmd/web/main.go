@@ -41,6 +41,8 @@ func main() {
 	sessionManager.Cookie.Persist = true
 	sessionManager.Cookie.SameSite = http.SameSiteLaxMode
 
+	appConfig.Session = sessionManager
+
 
 	utils.GetAppConfig(&appConfig)
 	controllers.SetRepo(controllers.NewRepository(&appConfig))

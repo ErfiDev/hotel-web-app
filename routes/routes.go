@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/controllers"
 	"github.com/go-chi/chi"
@@ -24,7 +23,7 @@ func Routes() http.Handler {
 	// Middlewares
 	router.Use(middleware.Recoverer)
 	router.Use(NoSurf)
-	fmt.Println(appConfig.Development)
+	router.Use(ServeSession)
 
 	router.Get("/" , controllers.Repo.Home)
 	router.Get("/about" , controllers.Repo.About)

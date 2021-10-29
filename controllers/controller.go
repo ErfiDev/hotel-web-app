@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/utils"
@@ -32,7 +31,6 @@ func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
 	utils.RenderTemplate(res , "main.page.gohtml" , models.TmpData{
 		Data: data,
 	})
-	fmt.Println(req.Cookies())
 }
 
 func (r Repository) About(res http.ResponseWriter, req *http.Request) {
