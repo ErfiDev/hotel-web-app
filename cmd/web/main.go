@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"github.com/alexedwards/scs"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/controllers"
 	"github.com/erfidev/hotel-web-app/routes"
@@ -8,7 +10,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
+
+// Global variables
+var appConfig = config.AppConfig{}
+var Store scs.Store
 
 func main() {
 	// create template caches
@@ -17,8 +24,7 @@ func main() {
 		log.Fatal("can't create template cache")
 	}
 
-	// init AppConfig
-	appConfig := config.AppConfig{}
+	// init AppConfig tmpCache
 	appConfig.TemplatesCache = tmpCache
 
 	if len(os.Args) > 1 {
@@ -30,12 +36,18 @@ func main() {
 		appConfig.Development = true
 	}
 
-	// Send to the getAppConfig package
+	// init session manager
+	sessionManager := scs.NewManager(Store)
+	sessionManager.Lifetime(24 * time.Hour)
+	sessionManager.Persist(true)
+	sessionManager.Secure(!appConfig.Development)
+
 	utils.GetAppConfig(&appConfig)
 	controllers.SetRepo(controllers.NewRepository(&appConfig))
-
+	routes.SetAppConfig(&appConfig)
 	// server initializing
-	routeHandler := routes.Routes(&appConfig)
+
+	routeHandler := routes.Routes()
 	webServer := &http.Server{
 		Addr: ":3000",
 		Handler: routeHandler,
@@ -45,4 +57,5 @@ func main() {
 	if err != nil {
 		log.Fatal("error on ListenAndServe")
 	}
+	fmt.Println("we on port :3000")
 }

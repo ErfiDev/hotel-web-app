@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/controllers"
 	"github.com/go-chi/chi"
@@ -11,13 +12,19 @@ import (
 	"strings"
 )
 
-func Routes(app *config.AppConfig) http.Handler {
+var appConfig *config.AppConfig
+
+func SetAppConfig(a *config.AppConfig) {
+	appConfig = a
+}
+
+func Routes() http.Handler {
 	router := chi.NewRouter()
 
 	// Middlewares
 	router.Use(middleware.Recoverer)
-	router.Use(UserCheckMiddleware)
 	router.Use(NoSurf)
+	fmt.Println(appConfig.Development)
 
 	router.Get("/" , controllers.Repo.Home)
 	router.Get("/about" , controllers.Repo.About)

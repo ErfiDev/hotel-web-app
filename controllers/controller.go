@@ -20,7 +20,7 @@ func NewRepository(app *config.AppConfig) *Repository {
 	}
 }
 
-func SetRepo(rep *Repository){
+func SetRepo(rep *Repository) {
 	Repo = rep
 }
 
