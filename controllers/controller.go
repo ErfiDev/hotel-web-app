@@ -28,17 +28,28 @@ func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
 		"erfan": "hanifezade",
 		"title": "home page",
 	}
+	remoteIp := req.RemoteAddr
+	r.App.Session.Put(req.Context() , "remote_ip" , remoteIp)
+
+
 	utils.RenderTemplate(res , "main.page.gohtml" , models.TmpData{
 		Data: data,
 	})
 }
 
 func (r Repository) About(res http.ResponseWriter, req *http.Request) {
+	getRemoteIp := r.App.Session.GetString(req.Context() , "remote_ip")
+
+	stringMap := map[string]string{
+		"remote_ip": getRemoteIp,
+	}
+
 	utils.RenderTemplate(res , "about.page.gohtml" , models.TmpData{
 		Data: map[string]string{
 			"about erfan": "erfanhanifezade",
 			"title": "about page",
 		},
+		StringMap: stringMap,
 	})
 }
 

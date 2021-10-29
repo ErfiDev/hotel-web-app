@@ -3,6 +3,10 @@
 {{define "content"}}
     <h1>About html page `/about`</h1>
     <a href="/">`/` page</a>
+        <h3>
+            this is the fucking remote address:
+            {{index .StringMap "remote_ip"}}
+        </h3>
 {{end}}
 
 {{define "css"}}
