@@ -1,0 +1,17 @@
+about that project (hotel application)
+
+- users can register and login
+- users can change password
+- users can change username or email or etc...
+- users can reserve the room on the hotel
+- users can cancel the room contact
+- show the all available rooms
+- show booked rooms
+- room capacity
+- rooms cost
+- user have the bank on account
+- sending notification (email)
+
+
+- mySql database
+- user auth and authorize
