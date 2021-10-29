@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/alexedwards/scs"
+	"github.com/alexedwards/scs/v2"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/controllers"
 	"github.com/erfidev/hotel-web-app/routes"
@@ -10,12 +10,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 // Global variables
 var appConfig = config.AppConfig{}
-var Store scs.Store
+var sessionManager *scs.SessionManager
 
 func main() {
 	// create template caches
@@ -37,10 +36,11 @@ func main() {
 	}
 
 	// init session manager
-	sessionManager := scs.NewManager(Store)
-	sessionManager.Lifetime(24 * time.Hour)
-	sessionManager.Persist(true)
-	sessionManager.Secure(!appConfig.Development)
+	sessionManager = scs.New()
+	sessionManager.Cookie.Secure = !appConfig.Development
+	sessionManager.Cookie.Persist = true
+	sessionManager.Cookie.SameSite = http.SameSiteLaxMode
+
 
 	utils.GetAppConfig(&appConfig)
 	controllers.SetRepo(controllers.NewRepository(&appConfig))
