@@ -7,10 +7,27 @@
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>{{.Data.title}}</title>
+        <link rel="stylesheet" href="/static/css/base.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
         {{template "css" .}}
     </head>
     <body>
+        <header class="header">
+            <ul class="header-ul">
+                <li class="header-ul-option header-home">Home</li>
+                <li class="header-ul-option header-about">About</li>
+                <li class="header-ul-option header-contact">Contact</li>
+                <li class="header-ul-option header-rooms">Rooms</li>
+            </ul>
+        </header>
+
         {{template "content" .}}
+
+        <footer class="footer">
+            this is the fucking footer
+        </footer>
     </body>
     </html>
 {{end}}

@@ -32,7 +32,7 @@ func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
 	r.App.Session.Put(req.Context() , "remote_ip" , remoteIp)
 
 
-	utils.RenderTemplate(res , "main.page.gohtml" , models.TmpData{
+	utils.RenderTemplate(res , "landing.page.gohtml" , models.TmpData{
 		Data: data,
 	})
 }
