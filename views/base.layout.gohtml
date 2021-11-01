@@ -15,12 +15,61 @@
         {{template  "js" .}}
     </head>
     <body>
+        {{$path := .Data.path}}
         <header class="header">
             <ul class="header-ul">
-                <li class="header-ul-option header-home">Home</li>
-                <li class="header-ul-option header-about">About</li>
-                <li class="header-ul-option header-contact">Contact</li>
-                <li class="header-ul-option header-rooms">Rooms</li>
+                {{if eq $path "/"}}
+                    <li class="header-ul-option header-home used">
+                        <a href="/">
+                            Home
+                        </a>
+                    </li>
+                 {{else}}
+                    <li class="header-ul-option header-home">
+                        <a href="/">
+                            Home
+                        </a>
+                    </li>
+                 {{end}}
+                {{if eq $path "/about"}}
+                    <li class="header-ul-option header-about used">
+                        <a href="/about">
+                            About
+                        </a>
+                    </li>
+                {{else}}
+                    <li class="header-ul-option header-about">
+                        <a href="/about">
+                            About
+                        </a>
+                    </li>
+                {{end}}
+                {{if eq $path "/contact"}}
+                    <li class="header-ul-option header-contact used">
+                        <a href="/contact">
+                            Contact
+                        </a>
+                    </li>
+                {{else}}
+                    <li class="header-ul-option header-contact">
+                        <a href="/contact">
+                            Contact
+                        </a>
+                    </li>
+                {{end}}
+                {{if eq $path "/rooms"}}
+                <li class="header-ul-option header-rooms used">
+                    <a href="/rooms">
+                        Rooms
+                    </a>
+                </li>
+            {{else}}
+                <li class="header-ul-option header-rooms">
+                    <a href="/rooms">
+                        Rooms
+                    </a>
+                </li>
+            {{end}}
             </ul>
         </header>
 

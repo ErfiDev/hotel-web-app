@@ -37,6 +37,10 @@ body {
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
+.header-ul-option a {
+    text-decoration: none;
+    color: inherit;
+}
 .header-ul-option::after {
     content: "";
     position: absolute;
@@ -110,6 +114,10 @@ body {
 }
 .footer-link-container img:hover {
     animation: HoverOnFooterLinks 0.3s ease-in-out;
+}
+
+.used::after {
+    width: 100%;
 }
 
 @keyframes HoverOnFooterLinks {

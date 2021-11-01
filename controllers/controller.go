@@ -25,7 +25,7 @@ func SetRepo(rep *Repository) {
 
 func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
 	data := map[string]string{
-		"erfan": "hanifezade",
+		"path": "/",
 		"title": "home page",
 	}
 	remoteIp := req.RemoteAddr
@@ -46,7 +46,7 @@ func (r Repository) About(res http.ResponseWriter, req *http.Request) {
 
 	utils.RenderTemplate(res , "about.page.gohtml" , models.TmpData{
 		Data: map[string]string{
-			"about erfan": "erfanhanifezade",
+			"path": "/about",
 			"title": "about page",
 		},
 		StringMap: stringMap,
@@ -55,4 +55,14 @@ func (r Repository) About(res http.ResponseWriter, req *http.Request) {
 
 func (r Repository) Middleware(res http.ResponseWriter , req *http.Request) {
 	utils.RenderTemplate(res , "about.page.gohtml" , nil)
+}
+
+func (r Repository) Rooms(res http.ResponseWriter , req *http.Request) {
+	pageData := models.TmpData{
+		Data: map[string]string{
+			"title": "Rooms page",
+			"path": "/rooms",
+		},
+	}
+	utils.RenderTemplate(res , "rooms.page.gohtml" , pageData)
 }
