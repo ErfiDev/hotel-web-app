@@ -23,10 +23,30 @@
             </ul>
         </header>
 
-        {{template "content" .}}
+        <section class="content-section">
+            {{template "content" .}}
+        </section>
 
         <footer class="footer">
-            this is the fucking footer
+            <div class="footer-stacks">
+                <span class="stacks-title stacks-option">Stacks</span>
+                <span class="stacks-option">Golang</span>
+                <span class="stacks-option">http pkg</span>
+                <span class="stacks-option">nosurf pkg</span>
+                <span class="stacks-option">CSRF token</span>
+                <span class="stacks-option">html & css</span>
+            </div>
+            <div class="footer-links">
+                <a class="footer-link-container" href="https://github.com/erfidev" target="_blank">
+                    <img src="/static/images/github.png" alt="github account" />
+                </a>
+                <a class="footer-link-container" href="https://twitter.com/erfan_6789" target="_blank">
+                    <img src="/static/images/twitter.png" alt="twitter icon" />
+                </a>
+                <a class="footer-link-container" href="https://erfanhanifezade.ir" target="_blank">
+                    <img src="/static/images/world-wide-web.png" alt="www icon" />
+                </a>
+            </div>
         </footer>
     </body>
     </html>
