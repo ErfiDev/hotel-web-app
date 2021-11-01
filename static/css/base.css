@@ -5,6 +5,12 @@
     font-family: "Poppins" , sans-serif !important;
 }
 
+body {
+    position: relative;
+    overflow: auto;
+    /*overflow-x: hidden !important;*/
+}
+
 .header {
     background-color : #212121;
     width: 100%;

@@ -1,10 +1,25 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <h1>
-        this is the landing page
-    </h1>
+    <div class="wrap">
+        <div class="arrow-left">
+            <img src="/static/images/arrow-left-solid.svg" alt="arrow left" />
+        </div>
+        <div class="slider slide-1">
+            <img src="/static/images/picture-1.jpg" />
+        </div>
+        <div class="slider slide-2">
+            <img src="/static/images/picture-1.jpg" />
+        </div>
+        <div class="slider slide-3">
+            <img src="/static/images/picture-1.jpg" />
+        </div>
+        <div class="arrow-right">
+            <img src="/static/images/arrow-right-solid.svg" alt="arrow left" />
+        </div>
+    </div>
 {{end}}
+
 {{define "css"}}
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/css/landing.css">
 {{end}}
