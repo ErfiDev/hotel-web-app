@@ -70,6 +70,19 @@
                     </a>
                 </li>
             {{end}}
+                {{if eq $path "/book-now"}}
+                    <li class="header-ul-option header-book-now used">
+                        <a href="/book-now">
+                            Book now
+                        </a>
+                    </li>
+                {{else}}
+                    <li class="header-ul-option header-book-now">
+                        <a href="/book-now">
+                            Book now
+                        </a>
+                    </li>
+                {{end}}
             </ul>
         </header>
 
