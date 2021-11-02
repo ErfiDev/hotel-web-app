@@ -64,5 +64,20 @@ func (r Repository) Rooms(res http.ResponseWriter , req *http.Request) {
 			"path": "/rooms",
 		},
 	}
-	utils.RenderTemplate(res , "rooms.page.gohtml" , pageData)
+
+	switch req.RequestURI {
+	case "/rooms":
+		utils.RenderTemplate(res , "rooms.page.gohtml" , pageData)
+
+	case "/rooms/generals":
+		pageData.Data["title"] = "Generals suite"
+		utils.RenderTemplate(res , "generals.page.gohtml" , pageData)
+
+	case "/rooms/majors":
+		pageData.Data["title"] = "Majors suite"
+		utils.RenderTemplate(res , "majors.page.gohtml" , pageData)
+
+	default:
+		res.Write([]byte("page not found"))
+	}
 }
