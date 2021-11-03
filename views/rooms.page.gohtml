@@ -1,15 +1,21 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <section class="rooms">
-        this is the /rooms path
+    <section class="w-100 h-100">
+        <h1 class="ms-5 mt-5">Rooms page</h1>
+        <ul class="mt-5 ms-5">
+            <li>
+                <a href="/rooms/generals">Generals quarters</a>
+            </li>
+            <li>
+                <a href="/rooms/majors">Majors suite</a>
+            </li>
+        </ul>
     </section>
 {{end}}
 
 {{define "css"}}
-    <link rel="stylesheet" href="/static/css/rooms.css">
 {{end}}
 
 {{define "js"}}
-
 {{end}}
