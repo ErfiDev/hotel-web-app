@@ -38,18 +38,11 @@ func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
 }
 
 func (r Repository) About(res http.ResponseWriter, req *http.Request) {
-	getRemoteIp := r.App.Session.GetString(req.Context() , "remote_ip")
-
-	stringMap := map[string]string{
-		"remote_ip": getRemoteIp,
-	}
-
 	utils.RenderTemplate(res , "about.page.gohtml" , models.TmpData{
 		Data: map[string]string{
 			"path": "/about",
 			"title": "about page",
 		},
-		StringMap: stringMap,
 	})
 }
 
