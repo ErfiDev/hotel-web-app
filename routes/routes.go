@@ -27,6 +27,7 @@ func Routes() http.Handler {
 	for _ , route := range []string{"/rooms" , "/rooms/generals" , "/rooms/majors"} {
 		router.Get(route , controllers.Repo.Rooms)
 	}
+	router.Get("/book-now" , controllers.Repo.BookNow)
 	fileServer := http.FileServer(http.Dir("./static"))
 	router.Handle("/static/*" , http.StripPrefix("/static" , fileServer))
 

@@ -81,3 +81,14 @@ func (r Repository) Rooms(res http.ResponseWriter , req *http.Request) {
 		res.Write([]byte("page not found"))
 	}
 }
+
+func (r Repository) BookNow(res http.ResponseWriter , req *http.Request) {
+	pageData := models.TmpData{
+		Data : map[string]string{
+			"title": "Book now",
+			"path": "/book-now",
+		},
+	}
+
+	utils.RenderTemplate(res , "book.page.gohtml" , pageData)
+}

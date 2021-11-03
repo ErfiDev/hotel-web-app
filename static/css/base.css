@@ -5,6 +5,14 @@
     font-family: "Poppins" , sans-serif !important;
 }
 
+a {
+    color: inherit !important;
+    text-decoration: none;
+}
+a:hover {
+    color: inherit !important;
+}
+
 body {
     position: relative;
     overflow: auto;

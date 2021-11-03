@@ -1,0 +1,14 @@
+.book-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10vh;
+}
+
+.book-form {
+
+}
+
+.book-input {
+    margin: 2vh;
+}
