@@ -85,3 +85,12 @@ func (r Repository) BookNow(res http.ResponseWriter , req *http.Request) {
 
 	utils.RenderTemplate(res , "book.page.gohtml" , pageData)
 }
+
+func (r Repository) Contact(res http.ResponseWriter , req *http.Request) {
+	utils.RenderTemplate(res , "contact.page.gohtml" , models.TmpData{
+		Data: map[string]string{
+			"title": "contact page",
+			"path": "/contact",
+		},
+	})
+}
