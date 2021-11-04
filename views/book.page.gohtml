@@ -2,12 +2,12 @@
 
 {{define "content"}}
     <section class="w-100 book-section">
-        <form action="/" method="POST" class="book-form">
+        <form action="" method="GET" class="book-form">
             <label for="start-date">Select start date:</label>
-            <input type="date" name="start-date" class="form-control book-input" id="start-date" />
+            <input required type="date" name="start-date" class="form-control book-input" id="start-date" />
 
             <label for="ending-date">Select ending date:</label>
-            <input type="date" name="ending-date" class="form-control book-input" id="ending-date" />
+            <input required type="date" name="ending-date" class="form-control book-input" id="ending-date" />
 
             <button type="submit" class="btn btn-primary mt-5">Search for availability</button>
         </form>

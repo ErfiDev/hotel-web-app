@@ -1,0 +1,44 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <section class="w-100" style="display: flex;justify-content: center;align-items: center">
+        <form method="POST">
+            <div class="form-group mt-3">
+                <label for="first_name">First Name:</label>
+                <input class="form-control"
+                       id="first_name" autocomplete="off" type='text'
+                       name='first_name' required>
+            </div>
+
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input class="form-control"
+                       id="last_name" autocomplete="off" type='text'
+                       name='last_name' required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input class="form-control" id="email"
+                       autocomplete="off" type='email'
+                       name='email' required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input class="form-control"  id="phone"
+                       autocomplete="off" type='email'
+                       name='phone'  required>
+            </div>
+
+            <hr>
+            <input type="submit" class="btn btn-primary" value="Make Reservation">
+        </form>
+    </section>
+{{end}}
+
+{{define "css"}}
+{{end}}
+
+{{define "js"}}
+{{end}}
