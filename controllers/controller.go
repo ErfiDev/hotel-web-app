@@ -99,7 +99,7 @@ func (r Repository) MakeReservation(res http.ResponseWriter , req *http.Request)
 	utils.RenderTemplate(res , "make-reservation.page.gohtml" , models.TmpData{
 		Data: map[string]string{
 			"title": "make your reservation page",
-			"path": "/make-reservation",
+			"path": "/book-now",
 		},
 	})
 }
