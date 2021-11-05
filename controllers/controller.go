@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
+	"github.com/erfidev/hotel-web-app/forms"
 	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/utils"
 	"net/http"
@@ -25,10 +27,9 @@ func SetRepo(rep *Repository) {
 }
 
 func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
-	data := map[string]string{
-		"path": "/",
-		"title": "home page",
-	}
+	data := make(map[string]interface{})
+	data["path"] = "/"
+	data["title"] = "Home Page"
 	remoteIp := req.RemoteAddr
 	r.App.Session.Put(req.Context() , "remote_ip" , remoteIp)
 
@@ -40,7 +41,7 @@ func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
 
 func (r Repository) About(res http.ResponseWriter, req *http.Request) {
 	utils.RenderTemplate(res , req , "about.page.gohtml" , &models.TmpData{
-		Data: map[string]string{
+		Data: map[string]interface{}{
 			"path": "/about",
 			"title": "about page",
 		},
@@ -50,7 +51,7 @@ func (r Repository) About(res http.ResponseWriter, req *http.Request) {
 
 func (r Repository) Rooms(res http.ResponseWriter , req *http.Request) {
 	pageData := models.TmpData{
-		Data: map[string]string{
+		Data: map[string]interface{}{
 			"title": "Rooms page",
 			"path": "/rooms",
 		},
@@ -75,7 +76,7 @@ func (r Repository) Rooms(res http.ResponseWriter , req *http.Request) {
 
 func (r Repository) BookNow(res http.ResponseWriter , req *http.Request) {
 	pageData := models.TmpData{
-		Data : map[string]string{
+		Data : map[string]interface{}{
 			"title": "Book now",
 			"path": "/book-now",
 		},
@@ -86,7 +87,7 @@ func (r Repository) BookNow(res http.ResponseWriter , req *http.Request) {
 
 func (r Repository) Contact(res http.ResponseWriter , req *http.Request) {
 	utils.RenderTemplate(res , req , "contact.page.gohtml" , &models.TmpData{
-		Data: map[string]string{
+		Data: map[string]interface{}{
 			"title": "contact page",
 			"path": "/contact",
 		},
@@ -95,10 +96,11 @@ func (r Repository) Contact(res http.ResponseWriter , req *http.Request) {
 
 func (r Repository) MakeReservation(res http.ResponseWriter , req *http.Request) {
 	utils.RenderTemplate(res , req , "make-reservation.page.gohtml" , &models.TmpData{
-		Data: map[string]string{
+		Data: map[string]interface{}{
 			"title": "make your reservation page",
 			"path": "/book-now",
 		},
+		Form: forms.New(nil),
 	})
 }
 
@@ -109,4 +111,42 @@ func (r Repository) BookNowPost(res http.ResponseWriter , req *http.Request) {
 	})
 
 	res.Write([]byte(toJson))
+}
+
+func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Request) {
+	err := req.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	reservationData := models.Reservation{
+		Firstname: req.Form.Get("first_name"),
+		Lastname: req.Form.Get("last_name"),
+		Email: req.Form.Get("email"),
+		Phone: req.Form.Get("phone"),
+	}
+
+	form := forms.New(req.PostForm)
+
+	form.Has("first_name" , req)
+	form.Has("last_name" , req)
+	form.Has("email" , req)
+	form.Has("phone" , req)
+
+	if !form.Valid(){
+		data := make(map[string]interface{})
+		data["reservation"] = reservationData
+		data["title"] = "Make reservation"
+		data["path"] = "/book-now"
+
+		utils.RenderTemplate(res , req , "make-reservation.page.gohtml" , &models.TmpData{
+			Data: data,
+			Form: form,
+		})
+
+		return
+	}
+
+	res.Write([]byte("Make reservation auth is complete"))
 }
