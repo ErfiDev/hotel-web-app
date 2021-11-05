@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	"encoding/json"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/utils"
@@ -103,5 +103,10 @@ func (r Repository) MakeReservation(res http.ResponseWriter , req *http.Request)
 }
 
 func (r Repository) BookNowPost(res http.ResponseWriter , req *http.Request) {
-	fmt.Println(req.Form)
+	toJson , _ := json.Marshal(map[string]string{
+		"msg": "Search for availability",
+		"status": "200",
+	})
+
+	res.Write([]byte(toJson))
 }
