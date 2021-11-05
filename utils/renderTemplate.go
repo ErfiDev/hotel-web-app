@@ -2,6 +2,8 @@ package utils
 
 import (
 	"github.com/erfidev/hotel-web-app/config"
+	"github.com/erfidev/hotel-web-app/models"
+	"github.com/justinas/nosurf"
 	"html/template"
 	"log"
 	"net/http"
@@ -16,25 +18,28 @@ func GetAppConfig(a *config.AppConfig) {
 	appConfig = a
 }
 
-func RenderTemplate(w http.ResponseWriter , tmpl string , data interface{}) {
+func AddDefaultData(tmpData *models.TmpData , req *http.Request) *models.TmpData {
+	tmpData.CSRF = nosurf.Token(req)
+	return tmpData
+}
+
+func RenderTemplate(w http.ResponseWriter , req *http.Request , tmpl string , data *models.TmpData) {
+	var tmpCache map[string]*template.Template
+
 	if appConfig.Development {
-		tmpCache , _ := CreateTemplateCache()
-		tmp , ok := tmpCache[tmpl]
-		if !ok {
-			log.Fatal("we can't find the template")
-		}
-
-		tmp.Execute(w , data)
+		tmpCache , _ = CreateTemplateCache()
 	} else {
-		caches := appConfig.TemplatesCache
-
-		findTmp , isOk := caches[tmpl]
-		if !isOk{
-			log.Fatal("not found template")
-		}
-
-		findTmp.Execute(w , data)
+		tmpCache = appConfig.TemplatesCache
 	}
+
+	find , ok := tmpCache[tmpl]
+	if !ok {
+		log.Fatal("can't find template")
+	}
+
+	data = AddDefaultData(data , req)
+
+	find.Execute(w , data)
 }
 
 func CreateTemplateCache() (map[string]*template.Template , error) {

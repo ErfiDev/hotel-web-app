@@ -2,7 +2,10 @@
 
 {{define "content"}}
     <section class="w-100 book-section">
-        <form action="" method="GET" class="book-form">
+        <form action="/book-now" method="POST" class="book-form">
+            <!-- CSRF token -->
+            <input hidden type="text" name="csrf_token" value="{{.CSRF}}" />
+
             <label for="start-date">Select start date:</label>
             <input required type="date" name="start-date" class="form-control book-input" id="start-date" />
 
@@ -12,6 +15,7 @@
             <button type="submit" class="btn btn-primary mt-5">Search for availability</button>
         </form>
     </section>
+{{/*    <script src="/static/js/book-now.js"></script>*/}}
 {{end}}
 
 {{define "css"}}

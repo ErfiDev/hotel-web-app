@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/utils"
@@ -32,13 +33,13 @@ func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
 	r.App.Session.Put(req.Context() , "remote_ip" , remoteIp)
 
 
-	utils.RenderTemplate(res , "landing.page.gohtml" , models.TmpData{
+	utils.RenderTemplate(res , req , "landing.page.gohtml" , &models.TmpData{
 		Data: data,
 	})
 }
 
 func (r Repository) About(res http.ResponseWriter, req *http.Request) {
-	utils.RenderTemplate(res , "about.page.gohtml" , models.TmpData{
+	utils.RenderTemplate(res , req , "about.page.gohtml" , &models.TmpData{
 		Data: map[string]string{
 			"path": "/about",
 			"title": "about page",
@@ -46,9 +47,6 @@ func (r Repository) About(res http.ResponseWriter, req *http.Request) {
 	})
 }
 
-func (r Repository) Middleware(res http.ResponseWriter , req *http.Request) {
-	utils.RenderTemplate(res , "about.page.gohtml" , nil)
-}
 
 func (r Repository) Rooms(res http.ResponseWriter , req *http.Request) {
 	pageData := models.TmpData{
@@ -60,15 +58,15 @@ func (r Repository) Rooms(res http.ResponseWriter , req *http.Request) {
 
 	switch req.RequestURI {
 	case "/rooms":
-		utils.RenderTemplate(res , "rooms.page.gohtml" , pageData)
+		utils.RenderTemplate(res , req , "rooms.page.gohtml" , &pageData)
 
 	case "/rooms/generals":
 		pageData.Data["title"] = "Generals suite"
-		utils.RenderTemplate(res , "generals.page.gohtml" , pageData)
+		utils.RenderTemplate(res , req , "generals.page.gohtml" , &pageData)
 
 	case "/rooms/majors":
 		pageData.Data["title"] = "Majors suite"
-		utils.RenderTemplate(res , "majors.page.gohtml" , pageData)
+		utils.RenderTemplate(res , req , "majors.page.gohtml" , &pageData)
 
 	default:
 		res.Write([]byte("page not found"))
@@ -83,11 +81,11 @@ func (r Repository) BookNow(res http.ResponseWriter , req *http.Request) {
 		},
 	}
 
-	utils.RenderTemplate(res , "book.page.gohtml" , pageData)
+	utils.RenderTemplate(res , req , "book.page.gohtml" , &pageData)
 }
 
 func (r Repository) Contact(res http.ResponseWriter , req *http.Request) {
-	utils.RenderTemplate(res , "contact.page.gohtml" , models.TmpData{
+	utils.RenderTemplate(res , req , "contact.page.gohtml" , &models.TmpData{
 		Data: map[string]string{
 			"title": "contact page",
 			"path": "/contact",
@@ -96,10 +94,14 @@ func (r Repository) Contact(res http.ResponseWriter , req *http.Request) {
 }
 
 func (r Repository) MakeReservation(res http.ResponseWriter , req *http.Request) {
-	utils.RenderTemplate(res , "make-reservation.page.gohtml" , models.TmpData{
+	utils.RenderTemplate(res , req , "make-reservation.page.gohtml" , &models.TmpData{
 		Data: map[string]string{
 			"title": "make your reservation page",
 			"path": "/book-now",
 		},
 	})
+}
+
+func (r Repository) BookNowPost(res http.ResponseWriter , req *http.Request) {
+	fmt.Println(req.Form)
 }
