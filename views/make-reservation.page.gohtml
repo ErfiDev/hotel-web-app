@@ -2,7 +2,7 @@
 
 {{define "content"}}
     <section class="w-100" style="display: flex;justify-content: center;align-items: center">
-        <form method="POST">
+        <form method="POST" class="make-reservation-form">
             <div class="form-group mt-3">
                 <label for="first_name">First Name:</label>
                 <input class="form-control"
@@ -27,7 +27,7 @@
             <div class="form-group">
                 <label for="phone">Phone:</label>
                 <input class="form-control"  id="phone"
-                       autocomplete="off" type='email'
+                       autocomplete="off" type="text"
                        name='phone'  required>
             </div>
 
@@ -35,6 +35,8 @@
             <input type="submit" class="btn btn-primary" value="Make Reservation">
         </form>
     </section>
+
+    <script src="/static/js/alert.js"></script>
 {{end}}
 
 {{define "css"}}
