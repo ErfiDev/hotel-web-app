@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/forms"
@@ -80,6 +79,7 @@ func (r Repository) BookNow(res http.ResponseWriter , req *http.Request) {
 			"title": "Book now",
 			"path": "/book-now",
 		},
+		Form: forms.New(nil),
 	}
 
 	utils.RenderTemplate(res , req , "book.page.gohtml" , &pageData)
@@ -105,12 +105,37 @@ func (r Repository) MakeReservation(res http.ResponseWriter , req *http.Request)
 }
 
 func (r Repository) BookNowPost(res http.ResponseWriter , req *http.Request) {
-	toJson , _ := json.Marshal(map[string]string{
-		"msg": "Search for availability",
-		"status": "200",
-	})
+	err := req.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	res.Write([]byte(toJson))
+	newBookNow := models.BookNow{
+		Start: req.Form.Get("start-date"),
+		End: req.Form.Get("ending-date"),
+	}
+
+	form := forms.New(req.PostForm)
+
+	form.Has("start-date" , req)
+	form.Has("ending-date" , req)
+
+	if !form.Valid() {
+		data := models.TmpData{
+			Data: map[string]interface{} {
+				"reservation": newBookNow,
+				"path": "/book-now",
+				"title": "Book now",
+			},
+			Form: form,
+		}
+
+		utils.RenderTemplate(res , req , "book.page.gohtml" , &data)
+		return
+	} else {
+		res.Write([]byte("book now is complete"))
+	}
 }
 
 func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Request) {
