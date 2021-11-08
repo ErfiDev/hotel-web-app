@@ -173,5 +173,23 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		return
 	}
 
-	res.Write([]byte("Make reservation auth is complete"))
+	r.App.Session.Put(req.Context() , "reservation" , reservationData)
+
+	http.Redirect(res , req , "/reservation-summary" , http.StatusSeeOther)
+}
+
+func (r Repository) ReservationSummary(res http.ResponseWriter , req *http.Request) {
+	reservation , isOk := r.App.Session.Get(req.Context() , "reservation").(models.Reservation)
+	if !isOk {
+		fmt.Println("can't find reservation data in session")
+		return
+	}
+
+	utils.RenderTemplate(res , req , "reservation.page.gohtml" , &models.TmpData{
+		Data: map[string]interface{}{
+			"reservation": reservation,
+			"title": "Reservation summary",
+			"path": "/book-now",
+		},
+	})
 }

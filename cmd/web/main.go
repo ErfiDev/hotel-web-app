@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"github.com/alexedwards/scs/v2"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/controllers"
+	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/routes"
 	"github.com/erfidev/hotel-web-app/utils"
 	"log"
@@ -17,6 +19,9 @@ var appConfig = config.AppConfig{}
 var sessionManager *scs.SessionManager
 
 func main() {
+	// Register value and type into encoding/Gob .Register()
+	gob.Register(models.Reservation{})
+
 	// create template caches
 	tmpCache , errCache := utils.CreateTemplateCache()
 	if errCache != nil {

@@ -1,0 +1,35 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <section class="w-100 h-100" style="display: flex; justify-content: center; align-items: center; flex-direction: column">
+        <h1 class="ms-5 mt-5">Reservation Summary</h1>
+
+        <hr />
+
+        {{$res := index .Data "reservation"}}
+        <table class="table table-striped w-50">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td>Name:</td>
+                    <td>{{$res.Firstname}}</td>
+                </tr>
+                <tr>
+                    <td>Last name:</td>
+                    <td>{{$res.Lastname}}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{$res.Email}}</td>
+                </tr>
+                <tr>
+                    <td>Phone:</td>
+                    <td>{{$res.Phone}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+{{end}}
+
+{{define "css"}}
+{{end}}
