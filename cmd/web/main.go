@@ -60,9 +60,9 @@ func main() {
 		Handler: routeHandler,
 	}
 
+	fmt.Println("we on port :3000")
 	err := webServer.ListenAndServe()
 	if err != nil {
 		log.Fatal("error on ListenAndServe")
 	}
-	fmt.Println("we on port :3000")
 }
