@@ -186,6 +186,8 @@ func (r Repository) ReservationSummary(res http.ResponseWriter , req *http.Reque
 		return
 	}
 
+	r.App.Session.Remove(req.Context() , "reservation")
+
 	utils.RenderTemplate(res , req , "reservation.page.gohtml" , &models.TmpData{
 		Data: map[string]interface{}{
 			"reservation": reservation,
