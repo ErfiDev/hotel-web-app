@@ -3,6 +3,8 @@ package routes
 import (
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/controllers"
+	"github.com/erfidev/hotel-web-app/models"
+	"github.com/erfidev/hotel-web-app/utils"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"net/http"
@@ -37,6 +39,16 @@ func Routes() http.Handler {
 	// POST routes
 	router.Post("/book-now" , controllers.Repo.BookNowPost)
 	router.Post("/make-reservation" , controllers.Repo.MakeReservationPost)
+	router.NotFound(NotFound)
 
 	return router
+}
+
+func NotFound(res http.ResponseWriter , req *http.Request) {
+	utils.RenderTemplate(res , req , "404.page.gohtml" , &models.TmpData{
+		Data: map[string]interface{}{
+			"title": "page not found",
+			"path": "/404",
+		},
+	})
 }
