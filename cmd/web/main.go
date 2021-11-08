@@ -19,6 +19,25 @@ var appConfig = config.AppConfig{}
 var sessionManager *scs.SessionManager
 
 func main() {
+	errInit := InitProject()
+	if errInit != nil {
+		log.Fatal(errInit)
+	}
+
+	routeHandler := routes.Routes()
+	webServer := &http.Server{
+		Addr: ":3000",
+		Handler: routeHandler,
+	}
+
+	fmt.Println("we on port :3000")
+	err := webServer.ListenAndServe()
+	if err != nil {
+		log.Fatal("error on ListenAndServe")
+	}
+}
+
+func InitProject() error {
 	// Register value and type into encoding/Gob .Register()
 	gob.Register(models.Reservation{})
 
@@ -26,6 +45,7 @@ func main() {
 	tmpCache , errCache := utils.CreateTemplateCache()
 	if errCache != nil {
 		log.Fatal("can't create template cache")
+		return errCache
 	}
 
 	// init AppConfig tmpCache
@@ -53,16 +73,5 @@ func main() {
 	controllers.SetRepo(controllers.NewRepository(&appConfig))
 	routes.SetAppConfig(&appConfig)
 	// server initializing
-
-	routeHandler := routes.Routes()
-	webServer := &http.Server{
-		Addr: ":3000",
-		Handler: routeHandler,
-	}
-
-	fmt.Println("we on port :3000")
-	err := webServer.ListenAndServe()
-	if err != nil {
-		log.Fatal("error on ListenAndServe")
-	}
+	return nil
 }
