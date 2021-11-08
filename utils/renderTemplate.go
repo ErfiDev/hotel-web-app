@@ -19,6 +19,9 @@ func GetAppConfig(a *config.AppConfig) {
 }
 
 func AddDefaultData(tmpData *models.TmpData , req *http.Request) *models.TmpData {
+	tmpData.Error = appConfig.Session.PopString(req.Context() , "error")
+	tmpData.Flash = appConfig.Session.PopString(req.Context() , "flash")
+	tmpData.Warning = appConfig.Session.PopString(req.Context() , "warning")
 	tmpData.CSRF = nosurf.Token(req)
 	return tmpData
 }

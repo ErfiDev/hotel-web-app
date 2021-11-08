@@ -181,7 +181,8 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 func (r Repository) ReservationSummary(res http.ResponseWriter , req *http.Request) {
 	reservation , isOk := r.App.Session.Get(req.Context() , "reservation").(models.Reservation)
 	if !isOk {
-		fmt.Println("can't find reservation data in session")
+		r.App.Session.Put(req.Context() , "error" , "can't get reservation data from session")
+		http.Redirect(res , req , "/" , http.StatusTemporaryRedirect)
 		return
 	}
 
