@@ -48,7 +48,8 @@ func GetRoutes() http.Handler {
 
 	// Middlewares
 	router.Use(middleware.Recoverer)
-	router.Use(NoSurf)
+	// because we in testing and not have the CSRF_TOKEN in the browser session
+	// router.Use(NoSurf)
 	router.Use(ServeSession)
 
 	router.Get("/" , Repo.Home)

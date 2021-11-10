@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 )
 
@@ -23,6 +24,8 @@ var routeTests = []struct {
 	{"rooms" , "GET" , "/rooms" , []PostData{} , http.StatusOK},
 	{"rooms-generals" , "GET" , "/rooms/generals" , []PostData{} , http.StatusOK},
 	{"rooms-majors" , "GET" , "/rooms/majors" , []PostData{} , http.StatusOK},
+	{"book-now-post" , "POST" , "/book-now" , []PostData{{"start-date" , "2022-05-08"},{"ending-date", "2024-07-04"}} , http.StatusOK},
+	{"make-reservation-post" , "POST" , "/make-reservation" , []PostData{{"first_name" , "erfan"},{"last_name","hanifezade"},{"email" , "erfan@gmail.com"},{"phone" , "6459656599"}} , http.StatusOK},
 }
 
 func TestControllers(t *testing.T) {
@@ -38,10 +41,22 @@ func TestControllers(t *testing.T) {
 			}
 
 			if res.StatusCode != route.expectedStatusCode {
-				t.Errorf("route %s testing failed" , route.name)
+				t.Errorf("for %s , we need to %d but got %d" , route.name , route.expectedStatusCode , res.StatusCode)
 			}
 		} else {
+			values := url.Values{}
+			for _ , value := range route.params {
+				values.Add(value.key , value.value)
+			}
+			res , err := ts.Client().PostForm(ts.URL + route.url , values)
+			if err != nil {
+				t.Log(err)
+				t.Fatal(err)
+			}
 
+			if res.StatusCode != route.expectedStatusCode {
+				t.Errorf("for %s , we need to %d but got %d" , route.name , route.expectedStatusCode , res.StatusCode)
+			}
 		}
 	}
 }
