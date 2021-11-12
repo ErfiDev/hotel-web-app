@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/forms"
 	"github.com/erfidev/hotel-web-app/models"
@@ -104,7 +103,7 @@ func (r Repository) MakeReservation(res http.ResponseWriter , req *http.Request)
 func (r Repository) BookNowPost(res http.ResponseWriter , req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
-		fmt.Println(err)
+		utils.ServerError(res , err)
 		return
 	}
 
@@ -138,7 +137,7 @@ func (r Repository) BookNowPost(res http.ResponseWriter , req *http.Request) {
 func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
-		fmt.Println(err)
+		utils.ServerError(res , err)
 		return
 	}
 
