@@ -12,12 +12,14 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 )
 
 var funcMap template.FuncMap
 var appConfig config.AppConfig
 var sessionManager *scs.SessionManager
+var InfoLog, ErrorLog *log.Logger
 
 func GetRoutes() http.Handler {
 	// Register value and type into encoding/Gob .Register()
@@ -31,6 +33,12 @@ func GetRoutes() http.Handler {
 
 	// init AppConfig tmpCache
 	appConfig.TemplatesCache = tmpCache
+
+	InfoLog = log.New(os.Stdout , "INFO\t" , log.Ldate|log.Ltime)
+	ErrorLog = log.New(os.Stdout , "ERROR\t" , log.Ldate|log.Ltime|log.Lshortfile)
+
+	appConfig.ErrorLog = ErrorLog
+	appConfig.InfoLog = InfoLog
 
 	// init session manager
 	sessionManager = scs.New()
