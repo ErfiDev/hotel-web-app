@@ -17,6 +17,8 @@ import (
 // Global variables
 var appConfig = config.AppConfig{}
 var sessionManager *scs.SessionManager
+var InfoLog *log.Logger
+var ErrorLog *log.Logger
 
 func main() {
 	errInit := InitProject()
@@ -50,6 +52,12 @@ func InitProject() error {
 
 	// init AppConfig tmpCache
 	appConfig.TemplatesCache = tmpCache
+
+	InfoLog = log.New(os.Stdout , "INFO\t" , log.Ldate|log.Ltime)
+	ErrorLog = log.New(os.Stdout , "ERROR\t" , log.Ldate|log.Ltime|log.Lshortfile)
+
+	appConfig.ErrorLog = ErrorLog
+	appConfig.InfoLog = InfoLog
 
 	if len(os.Args) > 1 {
 		secondArgs := os.Args[1]
