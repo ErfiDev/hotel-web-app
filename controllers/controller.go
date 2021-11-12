@@ -29,9 +29,6 @@ func (r Repository) Home(res http.ResponseWriter, req *http.Request) {
 	data := make(map[string]interface{})
 	data["path"] = "/"
 	data["title"] = "Home Page"
-	remoteIp := req.RemoteAddr
-	r.App.Session.Put(req.Context() , "remote_ip" , remoteIp)
-
 
 	utils.RenderTemplate(res , req , "landing.page.gohtml" , &models.TmpData{
 		Data: data,
