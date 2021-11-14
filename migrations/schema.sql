@@ -99,6 +99,46 @@ ALTER SEQUENCE public.restrictions_id_seq OWNED BY public.restrictions.id;
 
 
 --
+-- Name: room_restrictions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.room_restrictions (
+    id integer NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    room_id integer NOT NULL,
+    reservation_id integer NOT NULL,
+    restriction_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.room_restrictions OWNER TO postgres;
+
+--
+-- Name: room_restrictions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.room_restrictions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.room_restrictions_id_seq OWNER TO postgres;
+
+--
+-- Name: room_restrictions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.room_restrictions_id_seq OWNED BY public.room_restrictions.id;
+
+
+--
 -- Name: rooms; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -200,6 +240,13 @@ ALTER TABLE ONLY public.restrictions ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: room_restrictions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.room_restrictions ALTER COLUMN id SET DEFAULT nextval('public.room_restrictions_id_seq'::regclass);
+
+
+--
 -- Name: rooms id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -227,6 +274,14 @@ ALTER TABLE ONLY public.reservations
 
 ALTER TABLE ONLY public.restrictions
     ADD CONSTRAINT restrictions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: room_restrictions room_restrictions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.room_restrictions
+    ADD CONSTRAINT room_restrictions_pkey PRIMARY KEY (id);
 
 
 --
