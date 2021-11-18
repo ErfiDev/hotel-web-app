@@ -19,8 +19,8 @@ const maxOpenDBConn = 10
 const maxDBIdleConn = 5
 const maxDBLifeTime = 5 * time.Minute
 
-func ConnectDB(dbstr string) (*DB , error) {
-	db , err := NewDataBase(dbstr)
+func ConnectDB(distro string) (*DB , error) {
+	db , err := NewDataBase(distro)
 	if err != nil {
 		panic(err)
 	}

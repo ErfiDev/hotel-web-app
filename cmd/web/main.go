@@ -6,6 +6,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/controllers"
+	"github.com/erfidev/hotel-web-app/driver"
 	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/routes"
 	"github.com/erfidev/hotel-web-app/utils"
@@ -21,10 +22,11 @@ var InfoLog *log.Logger
 var ErrorLog *log.Logger
 
 func main() {
-	errInit := InitProject()
-	if errInit != nil {
-		log.Fatal(errInit)
+	db , err := InitProject()
+	if err != nil {
+		log.Fatal(err)
 	}
+	defer db.SQL.Close()
 
 	routeHandler := routes.Routes()
 	webServer := &http.Server{
@@ -33,13 +35,13 @@ func main() {
 	}
 
 	fmt.Println("we on port :3000")
-	err := webServer.ListenAndServe()
+	err = webServer.ListenAndServe()
 	if err != nil {
 		log.Fatal("error on ListenAndServe")
 	}
 }
 
-func InitProject() error {
+func InitProject() (*driver.DB , error) {
 	// Register value and type into encoding/Gob .Register()
 	gob.Register(models.Reservation{})
 
@@ -47,7 +49,6 @@ func InitProject() error {
 	tmpCache , errCache := utils.CreateTemplateCache()
 	if errCache != nil {
 		log.Fatal("can't create template cache")
-		return errCache
 	}
 
 	// init AppConfig tmpCache
@@ -76,10 +77,16 @@ func InitProject() error {
 
 	appConfig.Session = sessionManager
 
+	// Connecting to database
+	log.Println("Connecting to database...")
+	db , err := driver.ConnectDB(`host=localhost port=5432 dbname=hotel user=postgres password=28963323`)
+	if err != nil {
+		return nil , err
+	}
 
 	utils.GetAppConfig(&appConfig)
-	controllers.SetRepo(controllers.NewRepository(&appConfig))
+	controllers.SetRepo(controllers.NewRepository(&appConfig , db))
 	routes.SetAppConfig(&appConfig)
 	// server initializing
-	return nil
+	return db , nil
 }

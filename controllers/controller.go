@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"github.com/erfidev/hotel-web-app/config"
+	"github.com/erfidev/hotel-web-app/driver"
 	"github.com/erfidev/hotel-web-app/forms"
 	"github.com/erfidev/hotel-web-app/models"
+	"github.com/erfidev/hotel-web-app/repository"
+	"github.com/erfidev/hotel-web-app/repository/dbrepo"
 	"github.com/erfidev/hotel-web-app/utils"
 	"net/http"
 )
@@ -12,11 +15,13 @@ var Repo *Repository
 
 type Repository struct{
 	App *config.AppConfig
+	DB repository.DatabaseRepository
 }
 
-func NewRepository(app *config.AppConfig) *Repository {
+func NewRepository(app *config.AppConfig , db *driver.DB) *Repository {
 	return &Repository{
 		App : app,
+		DB: dbrepo.NewPostgresRepo(db.SQL , app),
 	}
 }
 
