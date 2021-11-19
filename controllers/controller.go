@@ -9,6 +9,7 @@ import (
 	"github.com/erfidev/hotel-web-app/repository/dbrepo"
 	"github.com/erfidev/hotel-web-app/utils"
 	"net/http"
+	"time"
 )
 
 var Repo *Repository
@@ -146,11 +147,33 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		return
 	}
 
+	sd := req.Form.Get("start_date")
+	ed := req.Form.Get("start_date")
+
+	layout := "2006-01-02"
+	stParse, err := time.Parse(layout , sd)
+	if err != nil {
+		utils.ServerError(res , err)
+	}
+	edParse , err := time.Parse(layout , ed)
+	if err != nil {
+		utils.ServerError(res , err)
+	}
+
+	//roomId := req.Form.Get("room_id")
+	//roomIdToInt, err := strconv.Atoi(roomId)
+	//if err != nil {
+	//	utils.ServerError(res , err)
+	//}
+
 	reservationData := models.Reservation{
-		Firstname: req.Form.Get("first_name"),
-		Lastname: req.Form.Get("last_name"),
+		FirstName: req.Form.Get("first_name"),
+		LastName: req.Form.Get("last_name"),
 		Email: req.Form.Get("email"),
 		Phone: req.Form.Get("phone"),
+		StartDate: stParse,
+		EndDate: edParse,
+		RoomId: 1,
 	}
 
 	form := forms.New(req.PostForm)
@@ -172,6 +195,11 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		})
 
 		return
+	}
+
+	errInsert := r.DB.InsertReservation(reservationData)
+	if errInsert != nil {
+		utils.ServerError(res , errInsert)
 	}
 
 	r.App.Session.Put(req.Context() , "reservation" , reservationData)

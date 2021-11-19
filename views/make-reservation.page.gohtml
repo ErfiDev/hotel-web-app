@@ -26,6 +26,20 @@
             </div>
 
             <div class="form-group mt-3">
+                <label for="start_date">Start date</label>
+                <input class="form-control"
+                       id="start_date" autocomplete="off" type='text'
+                       name='start_date' >
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="end_date">End date</label>
+                <input class="form-control"
+                       id="end_date" autocomplete="off" type='text'
+                       name='end_date' >
+            </div>
+
+            <div class="form-group mt-3">
                 <label for="email">Email:</label>
                 {{with .Form.Errors.Get "email"}}
                     <label class="text-danger">{{.}}</label>
