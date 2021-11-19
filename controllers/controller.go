@@ -154,10 +154,12 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 	stParse, err := time.Parse(layout , sd)
 	if err != nil {
 		utils.ServerError(res , err)
+		return
 	}
 	edParse , err := time.Parse(layout , ed)
 	if err != nil {
 		utils.ServerError(res , err)
+		return
 	}
 
 	//roomId := req.Form.Get("room_id")
@@ -197,9 +199,24 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		return
 	}
 
-	errInsert := r.DB.InsertReservation(reservationData)
+	reservationId,errInsert := r.DB.InsertReservation(reservationData)
 	if errInsert != nil {
 		utils.ServerError(res , errInsert)
+		return
+	}
+
+	roomRestrictions := models.RoomRestriction{
+		StartDate:     stParse,
+		EndDate:       edParse,
+		ReservationId: reservationId,
+		RestrictionId: 1,
+		RoomId:        1,
+	}
+
+	err = r.DB.InsertRoomRestriction(roomRestrictions)
+	if err != nil {
+		utils.ServerError(res , err)
+		return
 	}
 
 	r.App.Session.Put(req.Context() , "reservation" , reservationData)

@@ -21,15 +21,16 @@ func NewPostgresRepo(connection *sql.DB ,app *config.AppConfig) repository.Datab
 	}
 }
 
-func (psdb postgresDbRepo) InsertReservation(reservation models.Reservation) error {
+func (psdb postgresDbRepo) InsertReservation(reservation models.Reservation) (int , error) {
 	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
 	defer cancel()
 
 	statement := `insert into reservations (first_name, last_name, email, phone, start_date, end_date,
-	room_id, created_at, updated_at) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+	room_id, created_at, updated_at) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning id
 `
+	var newId int
 
-	_ , err :=psdb.DB.ExecContext(
+	err :=psdb.DB.QueryRowContext(
 		ctx,
 		statement,
 		reservation.FirstName,
@@ -41,11 +42,38 @@ func (psdb postgresDbRepo) InsertReservation(reservation models.Reservation) err
 		reservation.RoomId,
 		time.Now(),
 		time.Now(), 
-	)
+	).Scan(&newId)
 	
+	if err != nil {
+		return 0 , err
+	}
+	
+	return newId , nil
+}
+
+func (psdb postgresDbRepo) InsertRoomRestriction(roomRestriction models.RoomRestriction) error {
+	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
+	defer cancel()
+
+	statement := `insert into room_restrictions (start_date,end_date,
+				room_id, reservation_id , restriction_id , created_at , updated_at)
+				values ($1 , $2 , $3, $4, $5, $6, $7)`
+
+	_ , err := psdb.DB.ExecContext(
+		ctx ,
+		statement,
+		roomRestriction.StartDate,
+		roomRestriction.EndDate,
+		roomRestriction.RoomId,
+		roomRestriction.ReservationId,
+		roomRestriction.RestrictionId,
+		time.Now(),
+		time.Now(),
+	)
+
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
