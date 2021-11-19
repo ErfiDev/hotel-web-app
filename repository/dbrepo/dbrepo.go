@@ -105,3 +105,39 @@ func (psdb postgresDbRepo) SearchAvailability(roomId int ,start , end time.Time)
 
 	return false , nil
 }
+
+func (psdb postgresDbRepo) SearchAvailabilityForAllRooms(start , end time.Time) ([]models.Room , error) {
+	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
+	defer cancel()
+
+	statement := `select id , room_name from rooms
+	where id not in (select room_id from room_restrictions where $1 < end_date and $2 > start_date)`
+
+	var rooms []models.Room
+
+	rows , err := psdb.DB.QueryContext(ctx , statement , start,end)
+	if err != nil {
+		return rooms , err
+	}
+
+	for rows.Next() {
+		room := models.Room{}
+		err := rows.Scan(
+			&room.ID,
+			&room.RoomName,
+		)
+
+		if err != nil {
+			return rooms , err
+		}
+
+		rooms = append(rooms , room)
+	}
+
+	if err = rows.Err(); err != nil {
+		return rooms , err
+	}
+
+
+	return rooms , nil
+}
