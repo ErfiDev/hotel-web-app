@@ -2,36 +2,39 @@ package models
 
 import "time"
 
-type Reservations struct {
+type Reservation struct {
 	ID int
-	First_name , Last_name , Email , Phone string
-	Start_date , End_date time.Time
-	Room_id int
-	Created_at , Updated_at time.Time
+	FirstName , LastName , Email , Phone string
+	StartDate , EndDate time.Time
+	RoomId int
+	CreatedAt , UpdatedAt time.Time
+	Room Room
 }
 
-type Users struct {
+type User struct {
 	ID int
-	First_name , Last_name , Email , Password string
-	Access_level int
-	Created_at , Updated_at time.Time
+	FirstName , LastName , Email , Password string
+	AccessLevel int
+	CreatedAt , UpdatedAt time.Time
 }
 
-type Rooms struct {
+type Room struct {
 	ID int
-	Room_name string
-	Created_at , Updated_at time.Time
+	RoomName string
+	CreatedAt , UpdatedAt time.Time
 }
 
-type RoomRestrictions struct {
+type RoomRestriction struct {
 	ID int
-	Start_date , End_date time.Time
-	Created_at , Updated_at time.Time
-	Reservation_id , Restriction_id , Room_id int
+	StartDate , EndDate time.Time
+	CreatedAt , UpdatedAt time.Time
+	ReservationId , RestrictionId , RoomId int
+	Reservation Reservation
+	Restriction Restriction
 }
 
-type Restrictions struct {
+type Restriction struct {
 	ID int
-	Restriction_name string
-	Created_at , Updated_at time.Time
+	RestrictionName string
+	CreatedAt , UpdatedAt time.Time
 }
