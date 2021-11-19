@@ -78,7 +78,7 @@ func (psdb postgresDbRepo) InsertRoomRestriction(roomRestriction models.RoomRest
 	return nil
 }
 
-func (psdb postgresDbRepo) SearchAvailability(start , end time.Time) (int , error) {
+func (psdb postgresDbRepo) SearchAvailability(start , end time.Time) (bool , error) {
 	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
 	defer cancel()
 
@@ -95,8 +95,12 @@ func (psdb postgresDbRepo) SearchAvailability(start , end time.Time) (int , erro
 	)
 	err := row.Scan(&numRows)
 	if err != nil {
-		return 0 , err
+		return false , err
 	}
 
-	return numRows , nil
+	if numRows == 0 {
+		return true , nil
+	}
+
+	return false , nil
 }
