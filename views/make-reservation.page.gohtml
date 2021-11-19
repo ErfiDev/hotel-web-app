@@ -1,9 +1,19 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <section class="w-100" style="display: flex;justify-content: center;align-items: center">
+    <section class="w-100" style="display: flex;flex-direction: column;justify-content: center;align-items: center">
+        <p class="mt-5 mb-5">
+            room:{{.Data.reservation.Room.RoomName}}<br>
+            arrival: {{.StringMap.startDate}}<br>
+            departure: {{.StringMap.endDate}}<br>
+        </p>
         <form action="/make-reservation" method="POST" class="make-reservation-form">
+            {{$res := index .Data "reservation"}}
+
             <input type="text" hidden name="csrf_token" value="{{.CSRF}}" />
+            <input type="text" hidden name="start_date" value="{{.StringMap.startDate}}" />
+            <input type="text" hidden name="end_date" value="{{.StringMap.endDate}}" />
+            <input type="number" hidden name="room_id" value="{{$res.RoomId}}" />
 
             <div class="form-group mt-4">
                 <label for="first_name">First Name:</label>
@@ -12,7 +22,7 @@
                 {{end}}
                 <input class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid  {{end}}"
                        id="first_name" autocomplete="off" type='text'
-                       name='first_name' value="{{with .Data.reservation.Firstname}}{{.}}{{end}}">
+                       name='first_name' value="{{with $res.FirstName}}{{.}}{{end}}">
             </div>
 
             <div class="form-group mt-3">
@@ -22,21 +32,7 @@
                 {{end}}
                 <input class="form-control {{with .Form.Errors.Get "last_name"}} is-invalid  {{end}}"
                        id="last_name" autocomplete="off" type='text'
-                       name='last_name' value="{{with .Data.reservation.Lastname}}{{.}}{{end}}">
-            </div>
-
-            <div class="form-group mt-3">
-                <label for="start_date">Start date</label>
-                <input class="form-control"
-                       id="start_date" autocomplete="off" type='text'
-                       name='start_date' >
-            </div>
-
-            <div class="form-group mt-3">
-                <label for="end_date">End date</label>
-                <input class="form-control"
-                       id="end_date" autocomplete="off" type='text'
-                       name='end_date' >
+                       name='last_name' value="{{with $res.LastName}}{{.}}{{end}}">
             </div>
 
             <div class="form-group mt-3">
@@ -46,7 +42,7 @@
                 {{end}}
                 <input class="form-control {{with .Form.Errors.Get "email"}} is-invalid  {{end}}" id="email"
                        autocomplete="off" type='email'
-                       name='email' value="{{with .Data.reservation.Email}}{{.}}{{end}}">
+                       name='email' value="{{with $res.Email}}{{.}}{{end}}">
             </div>
 
             <div class="form-group mt-3">
@@ -56,7 +52,7 @@
                 {{end}}
                 <input class="form-control {{with .Form.Errors.Get "phone"}} is-invalid  {{end}}"  id="phone"
                        autocomplete="off" type="text"
-                       name='phone' value="{{with .Data.reservation.Phone}}{{.}}{{end}}">
+                       name='phone' value="{{with $res.Phone}}{{.}}{{end}}">
             </div>
 
             <hr>

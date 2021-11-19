@@ -8,7 +8,9 @@ import (
 	"github.com/erfidev/hotel-web-app/repository"
 	"github.com/erfidev/hotel-web-app/repository/dbrepo"
 	"github.com/erfidev/hotel-web-app/utils"
+	"github.com/go-chi/chi"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -97,12 +99,37 @@ func (r Repository) Contact(res http.ResponseWriter , req *http.Request) {
 }
 
 func (r Repository) MakeReservation(res http.ResponseWriter , req *http.Request) {
+	reservation , ok := r.App.Session.Get(req.Context() , "reservation").(models.Reservation)
+	if !ok {
+		http.Redirect(res , req , "/book-now" , http.StatusTemporaryRedirect)
+		return
+	}
+
+	st := reservation.StartDate.Format("2006-01-02")
+	ed := reservation.EndDate.Format("2006-01-02")
+
+	room , err := r.DB.FindRoomById(reservation.RoomId)
+	if err != nil {
+		utils.ServerError(res , err)
+		return
+	}
+
+	reservation.Room = room
+
+	StringMap := map[string]string{
+		"startDate": st,
+		"endDate": ed,
+	}
+	Data := map[string]interface{}{
+		"title": "make reservation",
+		"path": "/book-now",
+		"reservation": reservation,
+	}
+
 	utils.RenderTemplate(res , req , "make-reservation.page.gohtml" , &models.TmpData{
-		Data: map[string]interface{}{
-			"title": "make your reservation page",
-			"path": "/book-now",
-		},
+		Data: Data,
 		Form: forms.New(nil),
+		StringMap: StringMap,
 	})
 }
 
@@ -136,8 +163,61 @@ func (r Repository) BookNowPost(res http.ResponseWriter , req *http.Request) {
 		utils.RenderTemplate(res , req , "book.page.gohtml" , &data)
 		return
 	} else {
-		res.Write([]byte("book now is complete"))
+		layout := "2006-01-02"
+		startDate , err := time.Parse(layout,newBookNow.Start)
+		if err != nil {
+			utils.ServerError(res , err)
+			return
+		}
+		endDate , err := time.Parse(layout,newBookNow.End)
+		if err != nil {
+			utils.ServerError(res , err)
+			return
+		}
+
+		rooms , err := r.DB.SearchAvailabilityForAllRooms(startDate , endDate)
+		if err != nil {
+			utils.ServerError(res , err)
+			return
+		}
+
+		if len(rooms) <= 0 {
+			r.App.Session.Put(req.Context() , "error" , "not availability")
+			http.Redirect(res , req , "/book-now" , http.StatusSeeOther)
+			return
+		}
+
+		data := make(map[string]interface{})
+		data["title"] = "Choose a room"
+		data["path"] = "/book-now"
+		data["rooms"] = rooms
+
+		reservation := models.Reservation{
+			StartDate: startDate,
+			EndDate:   endDate,
+		}
+
+		r.App.Session.Put(req.Context() , "reservation" , reservation)
+
+		utils.RenderTemplate(res , req , "choose-room.page.gohtml" , &models.TmpData{
+			Data: data,
+		})
 	}
+}
+
+func (r Repository) ChooseRoom(res http.ResponseWriter , req *http.Request) {
+	roomId , err := strconv.Atoi(chi.URLParam(req , "id"))
+	if err != nil {
+		utils.ServerError(res , err)
+		return
+	}
+
+	reservation := r.App.Session.Get(req.Context() , "reservation").(models.Reservation)
+
+	reservation.RoomId = roomId
+
+	r.App.Session.Put(req.Context() , "reservation" , reservation)
+	http.Redirect(res , req , "/make-reservation" , http.StatusTemporaryRedirect)
 }
 
 func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Request) {
@@ -148,7 +228,7 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 	}
 
 	sd := req.Form.Get("start_date")
-	ed := req.Form.Get("start_date")
+	ed := req.Form.Get("end_date")
 
 	layout := "2006-01-02"
 	stParse, err := time.Parse(layout , sd)
@@ -162,11 +242,12 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		return
 	}
 
-	//roomId := req.Form.Get("room_id")
-	//roomIdToInt, err := strconv.Atoi(roomId)
-	//if err != nil {
-	//	utils.ServerError(res , err)
-	//}
+	roomId := req.Form.Get("room_id")
+	roomIdToInt, err := strconv.Atoi(roomId)
+	if err != nil {
+		utils.ServerError(res , err)
+		return
+	}
 
 	reservationData := models.Reservation{
 		FirstName: req.Form.Get("first_name"),
@@ -175,7 +256,7 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		Phone: req.Form.Get("phone"),
 		StartDate: stParse,
 		EndDate: edParse,
-		RoomId: 1,
+		RoomId: roomIdToInt,
 	}
 
 	form := forms.New(req.PostForm)
@@ -210,7 +291,7 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		EndDate:       edParse,
 		ReservationId: reservationId,
 		RestrictionId: 1,
-		RoomId:        1,
+		RoomId:        roomIdToInt,
 	}
 
 	err = r.DB.InsertRoomRestriction(roomRestrictions)

@@ -35,6 +35,7 @@ func Routes() http.Handler {
 	fileServer := http.FileServer(http.Dir("./static"))
 	router.Handle("/static/*" , http.StripPrefix("/static" , fileServer))
 	router.Get("/reservation-summary" , controllers.Repo.ReservationSummary)
+	router.Get("/choose-room/{id}" , controllers.Repo.ChooseRoom)
 
 	// POST routes
 	router.Post("/book-now" , controllers.Repo.BookNowPost)

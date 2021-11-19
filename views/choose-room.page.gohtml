@@ -1,0 +1,15 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <section class="w-100 h-100" style="display: flex;flex-direction: column;justify-content: center; align-items: center">
+        <h1 class="mt-5" style="margin-bottom: 5vh">Choose a Room</h1>
+        {{$rooms := index .Data "rooms"}}
+
+        {{range $rooms}}
+            <a href="/choose-room/{{.ID}}">{{.RoomName}}</a>
+        {{end}}
+    </section>
+{{end}}
+
+{{define "css"}}
+{{end}}

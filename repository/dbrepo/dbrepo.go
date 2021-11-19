@@ -141,3 +141,29 @@ func (psdb postgresDbRepo) SearchAvailabilityForAllRooms(start , end time.Time) 
 
 	return rooms , nil
 }
+
+func (psdb postgresDbRepo) FindRoomById(id int) (models.Room,error){
+	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
+	defer cancel()
+
+	statement := `select id, room_name, updated_at, created_at from rooms where id = $1`
+
+	var room models.Room
+
+	row := psdb.DB.QueryRowContext(ctx, statement , id)
+	if err := row.Err(); err != nil {
+		return room , err
+	}
+
+	err := row.Scan(
+		&room.ID,
+		&room.RoomName,
+		&room.UpdatedAt,
+		&room.CreatedAt,
+	)
+	if err != nil {
+		return room , err
+	}
+
+	return room , nil
+}
