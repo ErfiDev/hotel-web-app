@@ -8,5 +8,5 @@ import (
 type DatabaseRepository interface {
 	InsertReservation(reservation models.Reservation) (int , error)
 	InsertRoomRestriction(roomRestriction models.RoomRestriction) error
-	SearchAvailability(start , end time.Time) (bool , error)
+	SearchAvailability(roomId int, start , end time.Time) (bool , error)
 }

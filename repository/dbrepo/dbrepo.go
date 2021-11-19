@@ -78,18 +78,19 @@ func (psdb postgresDbRepo) InsertRoomRestriction(roomRestriction models.RoomRest
 	return nil
 }
 
-func (psdb postgresDbRepo) SearchAvailability(start , end time.Time) (bool , error) {
+func (psdb postgresDbRepo) SearchAvailability(roomId int ,start , end time.Time) (bool , error) {
 	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
 	defer cancel()
 
 	var numRows int
 
 	statement := `select count(id) from room_restrictions
-	where $1 < end_date and $2 > start_date`
+	where room_id = $1 and $2 < end_date and $3 > start_date`
 
 	row := psdb.DB.QueryRowContext(
 		ctx,
 		statement,
+		roomId,
 		start,
 		end,
 	)
