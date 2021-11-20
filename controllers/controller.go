@@ -116,6 +116,8 @@ func (r Repository) MakeReservation(res http.ResponseWriter , req *http.Request)
 
 	reservation.Room = room
 
+	r.App.Session.Put(req.Context() , "reservation" , reservation)
+
 	StringMap := map[string]string{
 		"startDate": st,
 		"endDate": ed,
@@ -227,37 +229,13 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		return
 	}
 
-	sd := req.Form.Get("start_date")
-	ed := req.Form.Get("end_date")
+	reservation := r.App.Session.Get(req.Context() , "reservation").(models.Reservation)
 
-	layout := "2006-01-02"
-	stParse, err := time.Parse(layout , sd)
-	if err != nil {
-		utils.ServerError(res , err)
-		return
-	}
-	edParse , err := time.Parse(layout , ed)
-	if err != nil {
-		utils.ServerError(res , err)
-		return
-	}
+	reservation.FirstName = req.Form.Get("first_name")
+	reservation.LastName = req.Form.Get("last_name")
+	reservation.Email = req.Form.Get("email")
+	reservation.Phone = req.Form.Get("phone")
 
-	roomId := req.Form.Get("room_id")
-	roomIdToInt, err := strconv.Atoi(roomId)
-	if err != nil {
-		utils.ServerError(res , err)
-		return
-	}
-
-	reservationData := models.Reservation{
-		FirstName: req.Form.Get("first_name"),
-		LastName: req.Form.Get("last_name"),
-		Email: req.Form.Get("email"),
-		Phone: req.Form.Get("phone"),
-		StartDate: stParse,
-		EndDate: edParse,
-		RoomId: roomIdToInt,
-	}
 
 	form := forms.New(req.PostForm)
 
@@ -268,7 +246,7 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 
 	if !form.Valid(){
 		data := make(map[string]interface{})
-		data["reservation"] = reservationData
+		data["reservation"] = reservation
 		data["title"] = "Make reservation"
 		data["path"] = "/book-now"
 
@@ -280,18 +258,18 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		return
 	}
 
-	reservationId,errInsert := r.DB.InsertReservation(reservationData)
+	reservationId,errInsert := r.DB.InsertReservation(reservation)
 	if errInsert != nil {
 		utils.ServerError(res , errInsert)
 		return
 	}
 
 	roomRestrictions := models.RoomRestriction{
-		StartDate:     stParse,
-		EndDate:       edParse,
+		StartDate:     reservation.StartDate,
+		EndDate:       reservation.EndDate,
 		ReservationId: reservationId,
 		RestrictionId: 1,
-		RoomId:        roomIdToInt,
+		RoomId:        reservation.RoomId,
 	}
 
 	err = r.DB.InsertRoomRestriction(roomRestrictions)
@@ -300,7 +278,7 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 		return
 	}
 
-	r.App.Session.Put(req.Context() , "reservation" , reservationData)
+	r.App.Session.Put(req.Context() , "reservation" , reservation)
 
 	http.Redirect(res , req , "/reservation-summary" , http.StatusSeeOther)
 }

@@ -11,9 +11,6 @@
             {{$res := index .Data "reservation"}}
 
             <input type="text" hidden name="csrf_token" value="{{.CSRF}}" />
-            <input type="text" hidden name="start_date" value="{{.StringMap.startDate}}" />
-            <input type="text" hidden name="end_date" value="{{.StringMap.endDate}}" />
-            <input type="number" hidden name="room_id" value="{{$res.RoomId}}" />
 
             <div class="form-group mt-4">
                 <label for="first_name">First Name:</label>
