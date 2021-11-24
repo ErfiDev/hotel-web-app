@@ -44,6 +44,11 @@ func main() {
 func InitProject() (*driver.DB , error) {
 	// Register value and type into encoding/Gob .Register()
 	gob.Register(models.Reservation{})
+	gob.Register(models.Room{})
+	gob.Register(models.BookNow{})
+	gob.Register(models.RoomRestriction{})
+	gob.Register(models.Restriction{})
+	gob.Register(models.User{})
 
 	// create template caches
 	tmpCache , errCache := utils.CreateTemplateCache()

@@ -150,9 +150,11 @@ func (r Repository) BookNowPost(res http.ResponseWriter , req *http.Request) {
 
 	form := forms.New(req.PostForm)
 
+	// check for valid date's
 	form.Has("start-date" , req)
 	form.Has("ending-date" , req)
 
+	// last input check
 	if !form.Valid() {
 		data := models.TmpData{
 			Data: map[string]interface{} {
@@ -344,15 +346,17 @@ func (r Repository) SearchAvailability(res http.ResponseWriter , req *http.Reque
 		}
 
 		if response {
-			rawResponse["status"] = 200
-			rawResponse["msg"] = "this room is available!"
-
-			toJson , err := json.Marshal(rawResponse)
-			if err != nil{
-				utils.ServerError(res , err)
-				return
+			reservation := models.Reservation{
+				StartDate: stDateToTime,
+				EndDate:   edDateToTime,
 			}
+			r.App.Session.Put(req.Context() , "reservation" , reservation)
 
+			rawResponse["msg"] = "room is available!"
+			rawResponse["status"] = 200
+			rawResponse["roomID"] = roomIdInt
+
+			toJson , _ := json.Marshal(rawResponse)
 			res.Write(toJson)
 		} else {
 			rawResponse["status"] = 404

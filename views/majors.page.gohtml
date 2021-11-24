@@ -72,17 +72,25 @@
                 let formData = new FormData(formModalForm)
                 formData.append("csrf_token" , {{.CSRF}})
                 formData.append("room_id" , 2)
+
                 fetch("/search-availability" , {
                     method: "POST",
                     body: formData,
-                },).then(res => res.json())
-                .then(data =>{
-                    if (data.status === 200) {
-                        Notify(data.msg , "success")
-                    } else {
-                        Notify(data.msg , "info")
-                    }
                 })
+                    .then(res => res.json())
+                    .then(json => {
+                        if(json.status === 200){
+                            let createLink = document.createElement("A")
+                            createLink.href = `/choose-room/${json.roomID}`;
+                            createLink.innerText = "Ok, let's do it!"
+                            createLink.classList.add("mt-5")
+                            containerFormModal.appendChild(createLink)
+                        } else {
+                            Notify(json.msg , "error")
+                        }
+                    })
+                    .catch(err => console.log(err))
+
             })
         })
     </script>
