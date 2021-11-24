@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/driver"
 	"github.com/erfidev/hotel-web-app/forms"
@@ -300,4 +301,70 @@ func (r Repository) ReservationSummary(res http.ResponseWriter , req *http.Reque
 			"path": "/book-now",
 		},
 	})
+}
+
+func (r Repository) SearchAvailability(res http.ResponseWriter , req *http.Request){
+	err := req.ParseForm()
+	if err != nil {
+		utils.ServerError(res , err)
+		return
+	}
+
+	startDate := req.Form.Get("start-date")
+	endDate := req.Form.Get("ending-date")
+	roomId := req.Form.Get("room_id")
+
+	form := forms.New(req.PostForm)
+
+	form.Has("start-date" , req)
+	form.Has("ending-date" , req)
+
+	rawResponse := make(map[string]interface{})
+
+	if !form.Valid() {
+		rawResponse["status"] = 406
+		rawResponse["msg"] = "please enter a valid date"
+
+		toJson , err := json.Marshal(rawResponse)
+		if err != nil {
+			utils.ServerError(res , err)
+			return
+		}
+
+		res.Write(toJson)
+	} else {
+		roomIdInt , _ := strconv.Atoi(roomId)
+		stDateToTime , _ := time.Parse("2006-01-02" , startDate)
+		edDateToTime , _ := time.Parse("2006-01-02" , endDate)
+
+		response , err := r.DB.SearchAvailability(roomIdInt , stDateToTime , edDateToTime)
+		if err != nil {
+			utils.ServerError(res , err)
+			return
+		}
+
+		if response {
+			rawResponse["status"] = 200
+			rawResponse["msg"] = "this room is available!"
+
+			toJson , err := json.Marshal(rawResponse)
+			if err != nil{
+				utils.ServerError(res , err)
+				return
+			}
+
+			res.Write(toJson)
+		} else {
+			rawResponse["status"] = 404
+			rawResponse["msg"] = "this room is unavailable!"
+
+			toJson , err := json.Marshal(rawResponse)
+			if err != nil{
+				utils.ServerError(res , err)
+				return
+			}
+
+			res.Write(toJson)
+		}
+	}
 }

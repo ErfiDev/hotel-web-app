@@ -71,6 +71,7 @@ body {
     width: 100%;
     min-height: 70vh;
     height: auto;
+    position: relative;
 }
 
 

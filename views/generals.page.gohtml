@@ -37,12 +37,18 @@
 
             <div class="col text-center mb-5 text-light">
 
-                <a id="check-availability-button" href="/book-now" class="btn btn-success">Check Availability</a>
+                <button class="btn btn-primary search-availability-rooms">Search availability</button>
 
             </div>
         </div>
+        <form method="post" hidden class="form-search-avai" action="/search-availability">
+            <input type="date" name="start_date" />
+            <input type="date" name="end_date" />
+            <input type="number" hidden value=1 />
+        </form>
     </div>
 {{end}}
 
 {{define "css"}}
+    <link rel="stylesheet" href="/static/css/form.css">
 {{end}}
