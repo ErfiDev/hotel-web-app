@@ -37,16 +37,55 @@
 
             <div class="col text-center mb-5 text-light">
 
-                <button class="btn btn-primary search-availability-rooms">Search availability</button>
+                <button class="btn btn-primary search-availability-rooms-btn">Search availability</button>
 
             </div>
         </div>
-        <form method="post" hidden class="form-search-avai" action="/search-availability">
-            <input type="date" name="start_date" />
-            <input type="date" name="end_date" />
-            <input type="number" hidden value=1 />
-        </form>
     </div>
+    <script defer>
+        const btn = document.querySelector(".search-availability-rooms-btn")
+        btn.addEventListener("click" , ()=> {
+            let form = `
+            <form action="/search-availability" method="post" class="form-modal-form">
+                    <label for="start-date">Select start date:</label>
+                    <input required type="date" name="start-date"
+                           class="form-control book-input" id="start-date" />
+
+                    <label for="ending-date">Select ending date:</label>
+                    <input required type="date" name="ending-date"
+                           class="form-control book-input" id="ending-date" />
+
+                    <button type="submit" class="btn btn-primary mt-5">Search for availability</button>
+            </form>
+            `
+
+            let containerFormModal = document.createElement("DIV")
+            containerFormModal.classList.add("form-modal")
+            containerFormModal.innerHTML = form
+
+            let contentSection = document.querySelector(".content-section")
+            contentSection.appendChild(containerFormModal)
+
+            let formModalForm = document.querySelector(".form-modal-form")
+            formModalForm.addEventListener("submit" , (e)=> {
+                e.preventDefault()
+                let formData = new FormData(formModalForm)
+                formData.append("csrf_token" , {{.CSRF}})
+                formData.append("room_id" , 1)
+                fetch("/search-availability" , {
+                    method: "POST",
+                    body: formData,
+                },).then(res => res.json())
+                    .then(data =>{
+                        if (data.status === 200) {
+                            Notify(data.msg , "success")
+                        } else {
+                            Notify(data.msg , "info")
+                        }
+                    })
+            })
+        })
+    </script>
 {{end}}
 
 {{define "css"}}
