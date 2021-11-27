@@ -11,7 +11,7 @@ import (
 
 type postgresDbRepo struct {
 	App *config.AppConfig
-	DB *sql.DB
+	DB  *sql.DB
 }
 
 func NewPostgresRepo(connection *sql.DB ,app *config.AppConfig) repository.DatabaseRepository {

@@ -24,6 +24,11 @@ var InfoLog, ErrorLog *log.Logger
 func GetRoutes() http.Handler {
 	// Register value and type into encoding/Gob .Register()
 	gob.Register(models.Reservation{})
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
+	gob.Register(models.RoomRestriction{})
+	gob.Register(models.Restriction{})
+	gob.Register(models.BookNow{})
 
 	// create template caches
 	tmpCache , errCache := CreateTestTemplateCache()
@@ -48,9 +53,8 @@ func GetRoutes() http.Handler {
 
 	appConfig.Session = sessionManager
 
-
 	utils.GetAppConfig(&appConfig)
-	SetRepo(NewRepository(&appConfig))
+	SetRepo(NewTestRepository(&appConfig))
 
 	router := chi.NewRouter()
 
@@ -72,9 +76,10 @@ func GetRoutes() http.Handler {
 	router.Handle("/static/*" , http.StripPrefix("/static" , fileServer))
 	router.Get("/reservation-summary" , Repo.ReservationSummary)
 
+	// POSTS
 	router.Post("/book-now" , Repo.BookNowPost)
-	// POST routes
 	router.Post("/make-reservation" , Repo.MakeReservationPost)
+	router.Post("/search-availability" , Repo.SearchAvailability)
 
 	return router
 }

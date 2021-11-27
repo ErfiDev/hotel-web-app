@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func TestRun(t *testing.T){
-	err := InitProject()
+	_ , err := InitProject()
 	if err != nil {
 		t.Error("Failed InitProject()")
 	}

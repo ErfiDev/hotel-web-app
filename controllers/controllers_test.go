@@ -20,12 +20,9 @@ var routeTests = []struct {
 	{"about" , "GET" , "/about" , []PostData{} , http.StatusOK},
 	{"contact" , "GET" , "/contact" , []PostData{} , http.StatusOK},
 	{"book-now" , "GET" , "/book-now" , []PostData{} , http.StatusOK},
-	{"make-reservation" , "GET" , "/make-reservation" , []PostData{} , http.StatusOK},
 	{"rooms" , "GET" , "/rooms" , []PostData{} , http.StatusOK},
 	{"rooms-generals" , "GET" , "/rooms/generals" , []PostData{} , http.StatusOK},
 	{"rooms-majors" , "GET" , "/rooms/majors" , []PostData{} , http.StatusOK},
-	{"book-now-post" , "POST" , "/book-now" , []PostData{{"start-date" , "2022-05-08"},{"ending-date", "2024-07-04"}} , http.StatusOK},
-	{"make-reservation-post" , "POST" , "/make-reservation" , []PostData{{"first_name" , "erfan"},{"last_name","hanifezade"},{"email" , "erfan@gmail.com"},{"phone" , "6459656599"}} , http.StatusOK},
 }
 
 func TestControllers(t *testing.T) {
