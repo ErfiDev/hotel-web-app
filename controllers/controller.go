@@ -73,7 +73,7 @@ func (r Repository) Rooms(res http.ResponseWriter , req *http.Request) {
 		utils.RenderTemplate(res , req , "rooms.page.gohtml" , &pageData)
 
 	case "/rooms/generals":
-		pageData.Data["title"] = "Generals suite"
+		pageData.Data["title"] = "Generals quarters"
 		utils.RenderTemplate(res , req , "generals.page.gohtml" , &pageData)
 
 	case "/rooms/majors":
