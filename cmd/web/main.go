@@ -34,21 +34,11 @@ func main() {
 
 	Listener()
 
-	newEmail := models.MailData{
-		From:    os.Getenv("EMAIL"),
-		To:      "hanifeerfan6@gmail.com",
-		Pass:    os.Getenv("EMAIL_PASS"),
-		Subject: "from golang http",
-		Content: "hello my name is erfan",
-	}
-
 	routeHandler := routes.Routes()
 	webServer := &http.Server{
 		Addr: ":3000",
 		Handler: routeHandler,
 	}
-
-	appConfig.MailChan <- newEmail
 
 	fmt.Println("we on port :3000")
 	err = webServer.ListenAndServe()

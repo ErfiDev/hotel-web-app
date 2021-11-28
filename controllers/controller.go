@@ -11,6 +11,7 @@ import (
 	"github.com/erfidev/hotel-web-app/utils"
 	"github.com/go-chi/chi"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 )
@@ -288,6 +289,22 @@ func (r Repository) MakeReservationPost(res http.ResponseWriter , req *http.Requ
 	}
 
 	r.App.Session.Put(req.Context() , "reservation" , reservation)
+
+	// sending confirmation email
+	emailContent := `
+	<h1>hi</h1>
+	<p>email from 'test' hotel</p>
+	<p>your reservation has complete enjoy it!</p>
+`
+	newEmail := models.MailData{
+		From:    os.Getenv("EMAIL"),
+		To:      reservation.Email,
+		Pass:    os.Getenv("EMAIL_PASS"),
+		Subject: "Reservation confirmation",
+		Content: emailContent,
+	}
+
+	r.App.MailChan <- newEmail
 
 	http.Redirect(res , req , "/reservation-summary" , http.StatusSeeOther)
 }
