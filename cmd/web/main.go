@@ -10,6 +10,7 @@ import (
 	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/routes"
 	"github.com/erfidev/hotel-web-app/utils"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
@@ -22,17 +23,32 @@ var InfoLog *log.Logger
 var ErrorLog *log.Logger
 
 func main() {
+	_ = godotenv.Load()
+
 	db , err := InitProject()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.SQL.Close()
+	defer close(appConfig.MailChan)
+
+	Listener()
+
+	newEmail := models.MailData{
+		From:    os.Getenv("EMAIL"),
+		To:      "hanifeerfan6@gmail.com",
+		Pass:    os.Getenv("EMAIL_PASS"),
+		Subject: "from golang http",
+		Content: "hello my name is erfan",
+	}
 
 	routeHandler := routes.Routes()
 	webServer := &http.Server{
 		Addr: ":3000",
 		Handler: routeHandler,
 	}
+
+	appConfig.MailChan <- newEmail
 
 	fmt.Println("we on port :3000")
 	err = webServer.ListenAndServe()
@@ -49,6 +65,9 @@ func InitProject() (*driver.DB , error) {
 	gob.Register(models.RoomRestriction{})
 	gob.Register(models.Restriction{})
 	gob.Register(models.User{})
+
+	mailChannel := make(chan models.MailData)
+	appConfig.MailChan = mailChannel
 
 	// create template caches
 	tmpCache , errCache := utils.CreateTemplateCache()
