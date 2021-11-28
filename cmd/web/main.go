@@ -41,7 +41,7 @@ func main() {
 	}
 
 	fmt.Println("we on port :3000")
-	err git = webServer.ListenAndServe()
+	err = webServer.ListenAndServe()
 	if err != nil {
 		log.Fatal("error on ListenAndServe")
 	}
