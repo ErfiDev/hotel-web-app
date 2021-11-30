@@ -3,7 +3,6 @@ package dbrepo
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/repository"
@@ -228,7 +227,7 @@ func (psdb postgresDbRepo) GetUserById(id int) (models.User , error) {
 	return user , nil
 }
 
-func (psdb postgresDbRepo) Authenticate(email , password string) (bool , error) {
+func (psdb postgresDbRepo) Authenticate(email , password string) (bool , string) {
 	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
 	defer cancel()
 
@@ -243,18 +242,18 @@ func (psdb postgresDbRepo) Authenticate(email , password string) (bool , error) 
 
 	err := row.Scan(&pass)
 	if err != nil {
-		return false , err
+		return false , "can't find user with this email!"
 	}
 
 	// check passwords
 	hashError := bcrypt.CompareHashAndPassword([]byte(pass) , []byte(password))
 	if hashError == bcrypt.ErrMismatchedHashAndPassword {
-		return false , errors.New("mismatched hash and password")
+		return false , "mismatched hash and password"
 	} else if hashError != nil {
-		return false , hashError
+		return false , "unexpected error"
 	}
 
-	return true , nil
+	return true , ""
 }
 
 func (psdb postgresDbRepo) 	UpdateUser(user models.User) (bool , error) {

@@ -40,3 +40,19 @@ func (psdb testDbRepo) FindRoomById(id int) (models.Room,error){
 	var room models.Room
 	return room , nil
 }
+
+func (psdb testDbRepo) InsertUser(user models.User) (bool , error) {
+	return true , nil
+}
+
+func (psdb testDbRepo) GetUserById(id int) (models.User , error) {
+	return models.User{} , nil
+}
+
+func (psdb testDbRepo) Authenticate(email , password string) (bool , string) {
+	return true , ""
+}
+
+func (psdb testDbRepo) UpdateUser(user models.User) (bool , error) {
+	return true , nil
+}
