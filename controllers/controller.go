@@ -402,6 +402,7 @@ func (r Repository) Login(res http.ResponseWriter , req *http.Request) {
 			"path": "/login",
 			"title": "login in account",
 		},
+		Form: forms.New(nil),
 	})
 }
 
@@ -439,6 +440,21 @@ func (r Repository) LoginPost(res http.ResponseWriter , req *http.Request) {
 		})
 		return
 	} else {
-
+		rawJson := make(map[string]interface{})
+		// authenticate
+		authenticate , err := r.DB.Authenticate(user.Email , user.Password)
+		if !authenticate {
+			rawJson["msg"] = err
+			rawJson["status"] = 403
+			toJson , _ := json.Marshal(rawJson)
+			res.Header().Add("Content-Type" , "application/json; charset=utf8")
+			res.Write(toJson)
+		} else {
+			rawJson["msg"] = "login successful"
+			rawJson["status"] = 200
+			toJson , _ := json.Marshal(rawJson)
+			res.Header().Add("Content-Type" , "application/json; charset=utf8")
+			res.Write(toJson)
+		}
 	}
 }

@@ -1,0 +1,57 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <section class="w-100 h-100" style="display: flex;flex-direction: column;justify-content: center;align-items: center">
+        <form action="/user/login" method="POST" class="user-login-form">
+            <input type="text" hidden name="csrf_token" value="{{.CSRF}}" />
+
+            {{$user := index .Data "user"}}
+
+            <div class="form-group mt-4">
+                <label for="first_name">First Name:</label>
+                {{with .Form.Errors.Get "first_name"}}
+                    <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid  {{end}}"
+                       id="first_name" autocomplete="off" type='text'
+                       name='first_name' value="{{with $user.FirstName}}{{.}}{{end}}">
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="last_name">Last Name:</label>
+                {{with .Form.Errors.Get "last_name"}}
+                    <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input class="form-control {{with .Form.Errors.Get "last_name"}} is-invalid  {{end}}"
+                       id="last_name" autocomplete="off" type='text'
+                       name='last_name' value="{{with $user.LastName}}{{.}}{{end}}">
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="email">Email:</label>
+                {{with .Form.Errors.Get "email"}}
+                    <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input class="form-control {{with .Form.Errors.Get "email"}} is-invalid  {{end}}" id="email"
+                       autocomplete="off" type='email'
+                       name='email' value="{{with $user.Email}}{{.}}{{end}}">
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="phone">Password</label>
+                {{with .Form.Errors.Get "password"}}
+                    <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input class="form-control {{with .Form.Errors.Get "password"}} is-invalid  {{end}}"  id="phone"
+                       autocomplete="off" type="password"
+                       name='password' value="{{with $user.Password}}{{.}}{{end}}">
+            </div>
+
+            <hr>
+            <input type="submit" class="btn btn-primary mb-5" value="Make Reservation">
+        </form>
+    </section>
+{{end}}
+
+{{define "css"}}
+{{end}}

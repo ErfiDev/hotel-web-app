@@ -42,7 +42,7 @@ func Routes() http.Handler {
 	router.Post("/book-now" , controllers.Repo.BookNowPost)
 	router.Post("/make-reservation" , controllers.Repo.MakeReservationPost)
 	router.Post("/search-availability" , controllers.Repo.SearchAvailability)
-	router.Post("/login" , controllers.Repo.LoginPost)
+	router.Post("/user/login" , controllers.Repo.LoginPost)
 
 	// Custom 404 page
 	router.NotFound(NotFound)
