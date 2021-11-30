@@ -395,3 +395,50 @@ func (r Repository) SearchAvailability(res http.ResponseWriter , req *http.Reque
 		}
 	}
 }
+
+func (r Repository) Login(res http.ResponseWriter , req *http.Request) {
+	utils.RenderTemplate(res , req , "login.page.gohtml" , &models.TmpData{
+		Data: map[string]interface{}{
+			"path": "/login",
+			"title": "login in account",
+		},
+	})
+}
+
+func (r Repository) LoginPost(res http.ResponseWriter , req *http.Request) {
+	err := req.ParseForm()
+	if err != nil {
+		utils.ServerError(res , err)
+		return
+	}
+
+	user := models.User{
+		FirstName:   req.Form.Get("first_name"),
+		LastName:    req.Form.Get("last_name"),
+		Email:       req.Form.Get("email"),
+		Password:    req.Form.Get("password"),
+		AccessLevel: 0,
+	}
+
+	form := forms.New(req.PostForm)
+
+	form.Has("first_name" , req)
+	form.Has("last_name" , req)
+	form.Has("email" , req)
+	form.Has("password" , req)
+
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["title"] = "login in account"
+		data["path"] = "/login"
+		data["user"] = user
+
+		utils.RenderTemplate(res , req , "login.page.gohtml" , &models.TmpData{
+			Data: data,
+			Form: form,
+		})
+		return
+	} else {
+
+	}
+}

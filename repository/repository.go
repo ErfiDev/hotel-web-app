@@ -11,4 +11,8 @@ type DatabaseRepository interface {
 	SearchAvailability(roomId int, start , end time.Time) (bool , error)
 	SearchAvailabilityForAllRooms(start , end time.Time) ([]models.Room , error)
 	FindRoomById(id int) (models.Room,error)
+	InsertUser(user models.User) (bool , error)
+	GetUserById(id int) (models.User , error)
+	Authenticate(email , password string) (bool , error)
+	UpdateUser(user models.User) (bool , error)
 }

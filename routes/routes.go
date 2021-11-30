@@ -36,11 +36,13 @@ func Routes() http.Handler {
 	router.Handle("/static/*" , http.StripPrefix("/static" , fileServer))
 	router.Get("/reservation-summary" , controllers.Repo.ReservationSummary)
 	router.Get("/choose-room/{id}" , controllers.Repo.ChooseRoom)
+	router.Get("/login" , controllers.Repo.Login)
 
 	// POST routes
 	router.Post("/book-now" , controllers.Repo.BookNowPost)
 	router.Post("/make-reservation" , controllers.Repo.MakeReservationPost)
 	router.Post("/search-availability" , controllers.Repo.SearchAvailability)
+	router.Post("/login" , controllers.Repo.LoginPost)
 
 	// Custom 404 page
 	router.NotFound(NotFound)

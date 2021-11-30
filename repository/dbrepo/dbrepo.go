@@ -3,9 +3,11 @@ package dbrepo
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/models"
 	"github.com/erfidev/hotel-web-app/repository"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -166,4 +168,119 @@ func (psdb postgresDbRepo) FindRoomById(id int) (models.Room,error){
 	}
 
 	return room , nil
+}
+
+func (psdb postgresDbRepo) InsertUser(user models.User) (bool , error) {
+	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
+	defer cancel()
+
+
+	query := `
+	insert into users (first_name , last_name , email , password , access_level) 
+	values ($1 , $2 , $3 , $4 , $5);
+	`
+
+	hashPass , err := bcrypt.GenerateFromPassword([]byte(user.Password) , 10)
+	if err != nil {
+		return false , err
+	}
+
+	_ , err = psdb.DB.ExecContext(ctx , query ,
+		user.FirstName ,
+		user.LastName ,
+		user.Email ,
+		hashPass ,
+		user.AccessLevel,
+	)
+
+	if err != nil {
+		return false , err
+	}
+
+	return true , nil
+}
+
+func (psdb postgresDbRepo) GetUserById(id int) (models.User , error) {
+	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
+	defer cancel()
+
+	query := `
+		select id ,first_name,last_name,email,password,access_level from users
+		where id = $1
+	`
+
+	var user models.User
+
+	row := psdb.DB.QueryRowContext(ctx , query , id)
+	err := row.Scan(
+		&user.ID,
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+		&user.Password,
+		&user.AccessLevel,
+	)
+
+	if err != nil {
+		return models.User{} , err
+	}
+
+	return user , nil
+}
+
+func (psdb postgresDbRepo) Authenticate(email , password string) (bool , error) {
+	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
+	defer cancel()
+
+	query := `
+		select password from users
+		where email = $1
+	`
+
+	var pass string
+
+	row := psdb.DB.QueryRowContext(ctx , query , email)
+
+	err := row.Scan(&pass)
+	if err != nil {
+		return false , err
+	}
+
+	// check passwords
+	hashError := bcrypt.CompareHashAndPassword([]byte(pass) , []byte(password))
+	if hashError == bcrypt.ErrMismatchedHashAndPassword {
+		return false , errors.New("mismatched hash and password")
+	} else if hashError != nil {
+		return false , hashError
+	}
+
+	return true , nil
+}
+
+func (psdb postgresDbRepo) 	UpdateUser(user models.User) (bool , error) {
+	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
+	defer cancel()
+
+	query := `
+		update users set first_name = $1, last_name = $2, email = $3, password = $4 , access_level = $5
+	`
+
+	hashPass , err := bcrypt.GenerateFromPassword([]byte(user.Password) , 10)
+ 	if err != nil {
+		 return false , err
+	}
+
+	_ , errOnExec := psdb.DB.ExecContext(ctx , query ,
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		hashPass,
+		user.AccessLevel,
+	)
+
+	if errOnExec != nil {
+		return false , errOnExec
+	}
+
+	return true , nil
 }
