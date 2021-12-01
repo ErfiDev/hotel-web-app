@@ -464,3 +464,12 @@ func (r Repository) Logout(res http.ResponseWriter , req *http.Request) {
 
 	http.Redirect(res , req , "/" , http.StatusSeeOther)
 }
+
+func (r Repository) AdminDashboard(res http.ResponseWriter , req *http.Request) {
+	utils.RenderTemplate(res , req , "admin-dashboard.page.gohtml" , &models.TmpData{
+		Data: map[string]interface{}{
+			"title": "Admin dashboard",
+			"path": "/admin/dashboard",
+		},
+	})
+}

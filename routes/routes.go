@@ -23,7 +23,6 @@ func Routes() http.Handler {
 	router.Use(middleware.Recoverer)
 	router.Use(NoSurf)
 	router.Use(ServeSession)
-	//router.Use(Authenticate)
 
 	router.Get("/" , controllers.Repo.Home)
 	router.Get("/about" , controllers.Repo.About)
@@ -39,6 +38,10 @@ func Routes() http.Handler {
 	router.Get("/choose-room/{id}" , controllers.Repo.ChooseRoom)
 	router.Get("/login" , controllers.Repo.Login)
 	router.Get("/logout" , controllers.Repo.Logout)
+	router.Route("/admin" , func (mux chi.Router) {
+		mux.Use(Authenticate)
+		mux.Get("/dashboard" , controllers.Repo.AdminDashboard)
+	})
 
 	// POST routes
 	router.Post("/book-now" , controllers.Repo.BookNowPost)
