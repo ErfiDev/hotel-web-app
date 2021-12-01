@@ -91,15 +91,27 @@
                 {{end}}
                 {{if eq $path "/login"}}
                     <li class="header-ul-option header-login used">
-                        <a href="/login">
-                            Login
-                        </a>
+                        {{if eq .Auth 1}}
+                            <a href="/logout">
+                            logout
+                            </a>
+                        {{else}}
+                            <a href="/login">
+                                Login
+                            </a>
+                        {{end}}
                     </li>
                 {{else}}
                     <li class="header-ul-option header-login">
-                        <a href="/login">
-                            Login
-                        </a>
+                        {{if eq .Auth 1}}
+                            <a href="/logout">
+                                logout
+                            </a>
+                        {{else}}
+                            <a href="/login">
+                                Login
+                            </a>
+                        {{end}}
                     </li>
                 {{end}}
             </ul>

@@ -23,6 +23,9 @@ func AddDefaultData(tmpData *models.TmpData , req *http.Request) *models.TmpData
 	tmpData.Flash = appConfig.Session.PopString(req.Context() , "flash")
 	tmpData.Warning = appConfig.Session.PopString(req.Context() , "warning")
 	tmpData.CSRF = nosurf.Token(req)
+	if appConfig.Session.Exists(req.Context() , "user_id") {
+		tmpData.Auth = 1
+	}
 	return tmpData
 }
 

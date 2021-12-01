@@ -12,4 +12,5 @@ type TmpData struct{
 	Warning string
 	Flash string
 	Form *forms.Form
+	Auth int
 }
