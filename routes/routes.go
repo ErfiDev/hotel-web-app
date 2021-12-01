@@ -38,6 +38,7 @@ func Routes() http.Handler {
 	router.Get("/reservation-summary" , controllers.Repo.ReservationSummary)
 	router.Get("/choose-room/{id}" , controllers.Repo.ChooseRoom)
 	router.Get("/login" , controllers.Repo.Login)
+	router.Get("/logout" , controllers.Repo.Logout)
 
 	// POST routes
 	router.Post("/book-now" , controllers.Repo.BookNowPost)

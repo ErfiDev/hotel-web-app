@@ -457,3 +457,10 @@ func (r Repository) LoginPost(res http.ResponseWriter , req *http.Request) {
 		}
 	}
 }
+
+func (r Repository) Logout(res http.ResponseWriter , req *http.Request) {
+	_ = r.App.Session.Destroy(req.Context())
+	_ = r.App.Session.RenewToken(req.Context())
+
+	http.Redirect(res , req , "/" , http.StatusSeeOther)
+}
