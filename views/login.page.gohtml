@@ -32,6 +32,30 @@
             <input type="submit" class="btn btn-primary mb-5" value="Log in">
         </form>
     </section>
+    <script defer>
+        const form = document.querySelector(".user-login-form")
+
+        form.addEventListener("submit" , (e)=> {
+            e.preventDefault()
+
+            let formValues = new FormData(form)
+
+            fetch("/user/login" , {
+                method: "POST",
+                body: formValues
+            }).then(res => res.json())
+            .then(json => {
+                if (json.status === 200) {
+                    Notify("Log in successful!" , "success")
+                    window.location.replace("http://localhost:3000/")
+                } else if (json.status === 403) {
+                    Notify("Password is not correct!" , "error")
+                } else {
+                    Notify("Server error!" , "error")
+                }
+            }).catch(err => Notify("Server error!" , "error"))
+        })
+    </script>
 {{end}}
 
 {{define "css"}}
