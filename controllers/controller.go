@@ -407,6 +407,8 @@ func (r Repository) Login(res http.ResponseWriter , req *http.Request) {
 }
 
 func (r Repository) LoginPost(res http.ResponseWriter , req *http.Request) {
+	_ = r.App.Session.RenewToken(req.Context())
+
 	err := req.ParseForm()
 	if err != nil {
 		utils.ServerError(res , err)
@@ -414,8 +416,6 @@ func (r Repository) LoginPost(res http.ResponseWriter , req *http.Request) {
 	}
 
 	user := models.User{
-		FirstName:   req.Form.Get("first_name"),
-		LastName:    req.Form.Get("last_name"),
 		Email:       req.Form.Get("email"),
 		Password:    req.Form.Get("password"),
 		AccessLevel: 0,
@@ -423,8 +423,6 @@ func (r Repository) LoginPost(res http.ResponseWriter , req *http.Request) {
 
 	form := forms.New(req.PostForm)
 
-	form.Has("first_name" , req)
-	form.Has("last_name" , req)
 	form.Has("email" , req)
 	form.Has("password" , req)
 
@@ -442,7 +440,7 @@ func (r Repository) LoginPost(res http.ResponseWriter , req *http.Request) {
 	} else {
 		rawJson := make(map[string]interface{})
 		// authenticate
-		authenticate , err := r.DB.Authenticate(user.Email , user.Password)
+		id , authenticate , err := r.DB.Authenticate(user.Email , user.Password)
 		if !authenticate {
 			rawJson["msg"] = err
 			rawJson["status"] = 403
@@ -455,6 +453,7 @@ func (r Repository) LoginPost(res http.ResponseWriter , req *http.Request) {
 			toJson , _ := json.Marshal(rawJson)
 			res.Header().Add("Content-Type" , "application/json; charset=utf8")
 			res.Write(toJson)
+			r.App.Session.Put(req.Context() , "user_id" , id)
 		}
 	}
 }

@@ -227,33 +227,34 @@ func (psdb postgresDbRepo) GetUserById(id int) (models.User , error) {
 	return user , nil
 }
 
-func (psdb postgresDbRepo) Authenticate(email , password string) (bool , string) {
+func (psdb postgresDbRepo) Authenticate(email , password string) (int, bool , string) {
 	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
 	defer cancel()
 
 	query := `
-		select password from users
+		select id, password from users
 		where email = $1
 	`
 
 	var pass string
+	var id int
 
 	row := psdb.DB.QueryRowContext(ctx , query , email)
 
-	err := row.Scan(&pass)
+	err := row.Scan(&id , &pass)
 	if err != nil {
-		return false , "can't find user with this email!"
+		return 0 ,false , "can't find user with this email!"
 	}
 
 	// check passwords
 	hashError := bcrypt.CompareHashAndPassword([]byte(pass) , []byte(password))
 	if hashError == bcrypt.ErrMismatchedHashAndPassword {
-		return false , "mismatched hash and password"
+		return 0 ,false , "mismatched hash and password"
 	} else if hashError != nil {
-		return false , "unexpected error"
+		return 0 ,false , "unexpected error"
 	}
 
-	return true , ""
+	return id , true , ""
 }
 
 func (psdb postgresDbRepo) 	UpdateUser(user models.User) (bool , error) {

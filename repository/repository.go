@@ -13,6 +13,6 @@ type DatabaseRepository interface {
 	FindRoomById(id int) (models.Room,error)
 	InsertUser(user models.User) (bool , error)
 	GetUserById(id int) (models.User , error)
-	Authenticate(email , password string) (bool , string)
+	Authenticate(email , password string) (int ,bool , string)
 	UpdateUser(user models.User) (bool , error)
 }

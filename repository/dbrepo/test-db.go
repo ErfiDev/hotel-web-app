@@ -49,8 +49,8 @@ func (psdb testDbRepo) GetUserById(id int) (models.User , error) {
 	return models.User{} , nil
 }
 
-func (psdb testDbRepo) Authenticate(email , password string) (bool , string) {
-	return true , ""
+func (psdb testDbRepo) Authenticate(email , password string) (int , bool , string) {
+	return 0 ,true , ""
 }
 
 func (psdb testDbRepo) UpdateUser(user models.User) (bool , error) {

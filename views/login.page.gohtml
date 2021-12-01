@@ -2,30 +2,11 @@
 
 {{define "content"}}
     <section class="w-100 h-100" style="display: flex;flex-direction: column;justify-content: center;align-items: center">
+        <h1 class="mt-5 mb-5">Login page</h1>
         <form action="/user/login" method="POST" class="user-login-form">
             <input type="text" hidden name="csrf_token" value="{{.CSRF}}" />
 
             {{$user := index .Data "user"}}
-
-            <div class="form-group mt-4">
-                <label for="first_name">First Name:</label>
-                {{with .Form.Errors.Get "first_name"}}
-                    <label class="text-danger">{{.}}</label>
-                {{end}}
-                <input class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid  {{end}}"
-                       id="first_name" autocomplete="off" type='text'
-                       name='first_name' value="{{with $user.FirstName}}{{.}}{{end}}">
-            </div>
-
-            <div class="form-group mt-3">
-                <label for="last_name">Last Name:</label>
-                {{with .Form.Errors.Get "last_name"}}
-                    <label class="text-danger">{{.}}</label>
-                {{end}}
-                <input class="form-control {{with .Form.Errors.Get "last_name"}} is-invalid  {{end}}"
-                       id="last_name" autocomplete="off" type='text'
-                       name='last_name' value="{{with $user.LastName}}{{.}}{{end}}">
-            </div>
 
             <div class="form-group mt-3">
                 <label for="email">Email:</label>
