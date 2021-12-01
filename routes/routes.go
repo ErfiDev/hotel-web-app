@@ -23,6 +23,7 @@ func Routes() http.Handler {
 	router.Use(middleware.Recoverer)
 	router.Use(NoSurf)
 	router.Use(ServeSession)
+	//router.Use(Authenticate)
 
 	router.Get("/" , controllers.Repo.Home)
 	router.Get("/about" , controllers.Repo.About)
