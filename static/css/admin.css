@@ -1,3 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins" , sans-serif !important;
+}
+
+a {
+    color: inherit !important;
+    text-decoration: none;
+}
+
+a:hover {
+    color: inherit !important;
+}
+
+body {
+    position: relative;
+    overflow: auto;
+    /*overflow-x: hidden !important;*/
+}
+
 .admin-section {
     display: flex;
     flex-direction: column;
@@ -7,9 +29,34 @@
 
 .admin-header {
     width: 100%;
-    text-align: left;
+    min-height: 25vh;
+    height: auto;
+    background-color: #212121;
+    color: rgba(255, 255, 255, 0.75);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.admin-header-h1 {
     padding: 0 0 0 5vw;
-    margin: 5vh 0 5vh 0;
+}
+.admin-header-backlink {
+    padding: 0 5vw 0 0;
+    position: relative;
+}
+.admin-header-backlink::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40%;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.75);
+    transform: scaleX(0);
+    transition: all 0.3s ease-in-out;
+}
+.admin-header-backlink:hover::after {
+    transform: scaleX(1);
 }
 
 .admin-content-section {
@@ -19,8 +66,6 @@
     display: grid;
     grid-template-columns: 1fr 4fr;
     grid-template-rows: 1fr;
-    border-top: solid 2px rgb(83, 83, 83);
-
 }
 
 .admin-sidebar {
@@ -64,5 +109,7 @@
 }
 
 .admin-content {
-    
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
 }
