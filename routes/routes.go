@@ -49,6 +49,9 @@ func Routes() http.Handler {
 	router.Post("/search-availability" , controllers.Repo.SearchAvailability)
 	router.Post("/user/login" , controllers.Repo.LoginPost)
 
+	// Api GET routes
+	router.Get("/api/allReservations" , controllers.Repo.AllReservationsApi)
+
 	// Custom 404 page
 	router.NotFound(NotFound)
 

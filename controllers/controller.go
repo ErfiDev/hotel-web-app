@@ -473,3 +473,32 @@ func (r Repository) AdminDashboard(res http.ResponseWriter , req *http.Request) 
 		},
 	})
 }
+
+func (r Repository) AllReservationsApi(res http.ResponseWriter , req *http.Request) {
+	adminAuth := utils.IsAuthenticated(req)
+
+	jsonTmp := make(map[string]interface{})
+
+	if !adminAuth {
+		jsonTmp["msg"] = "you are not allow to access this api!"
+		jsonTmp["status"] = http.StatusNotAcceptable
+		toJson , _ := json.Marshal(jsonTmp)
+
+		res.Header().Add("Content-Type" , "application/json; charset=utf8")
+		res.Write(toJson)
+
+		return
+	}
+
+	reservations , err := r.DB.AllReservations()
+	if err != nil {
+		utils.ServerError(res , err)
+		return
+	}
+
+	toJson , _ := json.Marshal(reservations)
+
+	res.Header().Add("Content-Type" , "application/json; charset=utf8")
+	res.Write(toJson)
+}
+
