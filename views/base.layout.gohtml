@@ -114,6 +114,13 @@
                         {{end}}
                     </li>
                 {{end}}
+                {{if eq .Auth 1}}
+                    <li class="header-ul-option header-admin used">
+                        <a href="/admin/dashboard">
+                            Dashboard
+                        </a>
+                    </li>
+                {{end}}
             </ul>
         </header>
 
