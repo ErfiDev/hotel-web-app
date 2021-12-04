@@ -61,7 +61,7 @@ body {
 
 .admin-content-section {
     width: 100%;
-    min-height: 70vh;
+    min-height: 80vh;
     height: auto;
     display: grid;
     grid-template-columns: 1fr 4fr;

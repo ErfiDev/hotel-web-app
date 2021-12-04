@@ -22,16 +22,37 @@
                 </div>
                 <div class="admin-content-section">
                     <div class="admin-sidebar">
+                        {{$path := .Data.path}}
                         <ul class="admin-sidebar-list">
-                            <li class="admin-sidebar-item">
-                                <a href="/admin/reservations">Reservations</a>
-                            </li>
-                            <li class="admin-sidebar-item">
-                                <a href="/admin/admins">Admins</a>
-                            </li>
-                            <li class="admin-sidebar-item">
-                                <a href="/admin/setting">Setting</a>
-                            </li>
+                            {{if eq $path "reservations"}}
+                                <li class="admin-sidebar-item used">
+                                    <a href="/admin/reservations">Reservations</a>
+                                </li>
+                            {{else}}
+                                <li class="admin-sidebar-item">
+                                    <a href="/admin/reservations">Reservations</a>
+                                </li>
+                            {{end}}
+                            {{if eq $path "/admins"}}
+                                <li class="admin-sidebar-item used">
+                                    <a href="/admin/admins">Admins</a>
+                                </li>
+                            {{else}}
+                                <li class="admin-sidebar-item">
+                                    <a href="/admin/admins">Admins</a>
+                                </li>
+                            {{end}}
+                            {{if eq $path "/setting"}}
+                                <li class="admin-sidebar-item used">
+                                    <a href="/admin/setting">Setting</a>
+                                </li>
+                            {{else}}
+                                <li class="admin-sidebar-item">
+                                    <a href="/admin/setting">Setting</a>
+                                </li>
+                            {{end}}
+                            {{if eq $path "/dashboard"}}
+                            {{end}}
                         </ul>
                     </div>
                     <div class="admin-content">

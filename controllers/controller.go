@@ -468,7 +468,7 @@ func (r Repository) AdminDashboard(res http.ResponseWriter, req *http.Request) {
 	utils.RenderTemplate(res, req, "admin-dashboard.page.gohtml", &models.TmpData{
 		Data: map[string]interface{}{
 			"title": "Admin dashboard",
-			// "path": "/admin/dashboard",
+			"path":  "/dashboard",
 		},
 	})
 }
@@ -499,4 +499,21 @@ func (r Repository) AllReservationsApi(res http.ResponseWriter, req *http.Reques
 
 	res.Header().Add("Content-Type", "application/json; charset=utf8")
 	res.Write(toJson)
+}
+
+func (r Repository) AdminReservations(res http.ResponseWriter, req *http.Request) {
+	reservations, err := r.DB.AllReservations()
+	if err != nil {
+		utils.ServerError(res, err)
+		return
+	}
+
+	data := make(map[string]interface{})
+	data["reservations"] = reservations
+	data["title"] = "all reservations"
+	data["path"] = "/reservations"
+
+	utils.RenderTemplate(res, req, "admin-reservations.page.gohtml", &models.TmpData{
+		Data: data,
+	})
 }
