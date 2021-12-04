@@ -56,3 +56,7 @@ func (psdb testDbRepo) Authenticate(email , password string) (int , bool , strin
 func (psdb testDbRepo) UpdateUser(user models.User) (bool , error) {
 	return true , nil
 }
+
+func (psdb testDbRepo) AllReservations() ([]models.Reservation , error) {
+	return []models.Reservation{} , nil
+}

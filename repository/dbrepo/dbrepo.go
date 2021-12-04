@@ -257,7 +257,7 @@ func (psdb postgresDbRepo) Authenticate(email , password string) (int, bool , st
 	return id , true , ""
 }
 
-func (psdb postgresDbRepo) 	UpdateUser(user models.User) (bool , error) {
+func (psdb postgresDbRepo) UpdateUser(user models.User) (bool , error) {
 	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
 	defer cancel()
 
@@ -284,3 +284,37 @@ func (psdb postgresDbRepo) 	UpdateUser(user models.User) (bool , error) {
 
 	return true , nil
 }
+
+func (psdb postgresDbRepo) AllReservations() ([]models.Reservation , error) {
+	ctx , cancel := context.WithTimeout(context.Background() , 3 * time.Second)
+	defer cancel()
+
+	query := `
+  	select rr.start_date, rr.end_date , re.email
+	from room_restrictions rr
+	left join rooms r on (rr.room_id = r.id) 
+	left join reservations re on (rr.reservation_id = re.id);
+	`
+
+	var reservations []models.Reservation
+
+	rows , err := psdb.DB.QueryContext(ctx , query)
+	if err != nil {
+		return reservations , err
+	}
+
+	for rows.Next() {
+		res := models.Reservation{}
+		_ = rows.Scan(
+			&res.StartDate,
+			&res.EndDate,
+			&res.FirstName,
+		)
+
+		reservations = append(reservations , res)
+	}
+
+	return reservations , nil
+}
+
+
