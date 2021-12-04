@@ -1,0 +1,68 @@
+.admin-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-header {
+    width: 100%;
+    text-align: left;
+    padding: 0 0 0 5vw;
+    margin: 5vh 0 5vh 0;
+}
+
+.admin-content-section {
+    width: 100%;
+    min-height: 70vh;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr;
+    border-top: solid 2px rgb(83, 83, 83);
+
+}
+
+.admin-sidebar {
+    border-right: solid 2px rgb(83, 83, 83);
+}
+
+.admin-sidebar-list {
+    margin: 0;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+.admin-sidebar-item {
+    margin: 10px;
+    color: #000;
+    cursor: pointer;
+    position: relative;
+    padding: 0 2px 0 2px;
+    text-decoration: none;
+}
+.admin-sidebar-item a {
+    color: inherit;
+    text-decoration: inherit;
+}
+.admin-sidebar-item::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #000;
+    transition: all 0.3s ease-in-out;
+    transform: scaleX(0);
+}
+.admin-sidebar-item:hover::after {
+    transform: scaleX(1);
+}
+
+.admin-content {
+    
+}

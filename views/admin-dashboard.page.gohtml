@@ -1,10 +1,27 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <section class="w-100 h-100">
-        <h1 class="mt-5 ms-5">Admin dashboard page</h1>
+    <section class="w-100 h-100 admin-section">
+        <h1 class="admin-header">Admin dashboard page</h1>
+        <div class="admin-content-section">
+            <div class="admin-sidebar">
+                <ul class="admin-sidebar-list">
+                    <li class="admin-sidebar-item">
+                        <a href="/admin/reservations">Reservations</a>
+                    </li>
+                    <li class="admin-sidebar-item">
+                        <a href="/admin/admins">Admins</a>
+                    </li>
+                    <li class="admin-sidebar-item">
+                        <a href="/admin/setting">Setting</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="admin-content"></div>
+        </div>
     </section>
-{{end}}
+{{end}} 
 
-{{define "css"}}
+{{define "css"}}    
+    <link rel="stylesheet" href="/static/css/admin.css" />
 {{end}}
