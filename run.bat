@@ -1,0 +1,1 @@
+go run cmd/web/mail.go cmd/web/main.go
