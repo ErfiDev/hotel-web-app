@@ -328,3 +328,36 @@ func (psdb postgresDbRepo) AllReservations() ([]models.Reservation, error) {
 
 	return reservations, nil
 }
+
+func (psdb postgresDbRepo) GetReservationById(id int) (models.Reservation, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `select r.id, r.first_name, r.last_name , r.email ,
+	r.phone , r.start_date , r.end_date, rm.room_name , rm.id
+	from reservations r
+	left join rooms rm on (r.room_id = rm.id) 
+	where r.id = $1;`
+
+	row := psdb.DB.QueryRowContext(ctx, query, id)
+
+	var res models.Reservation
+
+	err := row.Scan(
+		&res.ID,
+		&res.FirstName,
+		&res.LastName,
+		&res.Email,
+		&res.Phone,
+		&res.StartDate,
+		&res.EndDate,
+		&res.Room.RoomName,
+		&res.Room.ID,
+	)
+
+	if err != nil {
+		return res, err
+	}
+
+	return res, nil
+}
