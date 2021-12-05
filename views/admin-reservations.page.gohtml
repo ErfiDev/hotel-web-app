@@ -2,6 +2,32 @@
 
 {{define "adminsubpage"}}
     <div class="admin-content-reservations">
-
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>Email</td>
+                    <td>Name</td>
+                    <td>Family</td>
+                    <td>Phone</td>
+                    <td>Room</td>
+                    <td>Start-date</td>
+                    <td>End-date</td>
+                </tr>
+            </thead>
+            <tbody>
+                {{$res := index .Data "reservations"}}
+                {{range $index , $value := $res}}
+                <tr>
+                    <td>{{$value.Email}}</td>
+                    <td>{{$value.FirstName}}</td>
+                    <td>{{$value.LastName}}</td>
+                    <td>{{$value.Phone}}</td>
+                    <td>{{$value.Room.RoomName}}</td>
+                    <td>{{$value.StartDate}}</td>
+                    <td>{{$value.EndDate}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
     </div>
 {{end}}
