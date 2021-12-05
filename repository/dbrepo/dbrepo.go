@@ -289,7 +289,7 @@ func (psdb postgresDbRepo) AllReservations() ([]models.Reservation, error) {
 	defer cancel()
 
 	query := `
-  	select r.start_date, r.end_date , r.email ,
+  	select r.id, r.start_date, r.end_date , r.email ,
 	r.first_name , r.last_name , r.phone , r.created_at,
 	r.updated_at , rm.room_name , rm.id
 	from reservations r
@@ -308,6 +308,7 @@ func (psdb postgresDbRepo) AllReservations() ([]models.Reservation, error) {
 	for rows.Next() {
 		res := models.Reservation{}
 		err := rows.Scan(
+			&res.ID,
 			&res.StartDate,
 			&res.EndDate,
 			&res.Email,
