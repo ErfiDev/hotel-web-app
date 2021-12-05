@@ -124,3 +124,7 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.dataTable-wrapper {
+    width: 100%;
+}

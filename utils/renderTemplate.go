@@ -6,18 +6,25 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/models"
 	"github.com/justinas/nosurf"
 )
 
-var funcMap = template.FuncMap{}
+var funcMap = template.FuncMap{
+	"ToHumanDate": ToHumanDate,
+}
 
 var appConfig *config.AppConfig
 
 func GetAppConfig(a *config.AppConfig) {
 	appConfig = a
+}
+
+func ToHumanDate(t time.Time) string {
+	return t.Format("2006-01-02")
 }
 
 func AddDefaultData(tmpData *models.TmpData, req *http.Request) *models.TmpData {

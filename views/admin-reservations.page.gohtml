@@ -23,8 +23,8 @@
                     <td>{{$value.LastName}}</td>
                     <td>{{$value.Phone}}</td>
                     <td>{{$value.Room.RoomName}}</td>
-                    <td>{{$value.StartDate}}</td>
-                    <td>{{$value.EndDate}}</td>
+                    <td>{{ToHumanDate $value.StartDate}}</td>
+                    <td>{{ToHumanDate $value.EndDate}}</td>
                 </tr>
                 {{end}}
             </tbody>
