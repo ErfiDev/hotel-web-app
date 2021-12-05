@@ -2,7 +2,7 @@
 
 {{define "adminsubpage"}}
     <div class="admin-content-reservations">
-        <table class="table table-striped">
+        <table class="table table-striped" id="admin-reservations-table">
             <thead>
                 <tr>
                     <td>Email</td>
@@ -30,4 +30,10 @@
             </tbody>
         </table>
     </div>
+    <script>
+        const dataTable = new simpleDatatables.DataTable("#admin-reservations-table", {});
+    </script>
+{{end}}
+
+{{define "css"}}
 {{end}}
