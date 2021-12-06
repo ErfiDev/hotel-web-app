@@ -46,13 +46,39 @@
 
             <button class="btn btn-primary mt-5" type="submit">Update Reservation</button>
             <button class="cancel-update-res mt-5 btn btn-secondary" type="button">Cancel</button>
+            <button class="btn-delete-reservation mt-5 btn btn-danger" type="button">Delete reservation</button>
         </form>
     </div>
     <script defer>
         const cancelBtn = document.querySelector(".cancel-update-res")
+        const deleteBtn = document.querySelector(".btn-delete-reservation")
 
         cancelBtn.addEventListener("click" , ()=> {
             window.location.replace("http://localhost:3000/admin/reservations")
-        })
+        });
+
+        deleteBtn.addEventListener("click" , ()=> {
+            let formData = new FormData();
+            formData.append("csrf_token" , {{.CSRF}});
+            formData.append("id" , {{.Data.id}});
+ 
+            fetch("/admin/api/deleteReservation" , {
+                method: "POST",
+                body: formData
+            }).then(res => res.json())
+            .then(json => {
+                if (json.status === 200) {
+                    Notify(json.msg , "success")
+                    setTimeout(()=> {
+                        window.location.replace("http://localhost:3000/admin/reservations")
+                    } , 2000);
+                    return
+                } else {
+                Notify("we have problem on server" , "error")
+                }
+            }).catch(err => {
+                Notify("we have problem on server" , "error")
+            })
+        });
     </script>
 {{end}}

@@ -73,3 +73,7 @@ func (psdb testDbRepo) AllNewReservations() ([]models.Reservation, error) {
 func (psdb testDbRepo) UpdateReservation(res models.Reservation) (bool, error) {
 	return true, nil
 }
+
+func (psdb testDbRepo) DeleteReservation(id int) (bool, error) {
+	return true, nil
+}

@@ -47,6 +47,7 @@ func Routes() http.Handler {
 		mux.Get("/newReservations", controllers.Repo.NewReservations)
 		mux.Get("/reservation/{id}", controllers.Repo.SingleReservation)
 		mux.Post("/api/updateReservation", controllers.Repo.ApiUpdateReservation)
+		mux.Post("/api/deleteReservation", controllers.Repo.DeleteReservation)
 	})
 
 	// POST routes

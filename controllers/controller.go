@@ -619,3 +619,27 @@ func (r Repository) ApiUpdateReservation(res http.ResponseWriter, req *http.Requ
 		http.Redirect(res, req, "/admin/reservations", http.StatusSeeOther)
 	}
 }
+
+func (r Repository) DeleteReservation(res http.ResponseWriter, req *http.Request) {
+	id, _ := strconv.Atoi(req.Form.Get("id"))
+
+	deleting, _ := r.DB.DeleteReservation(id)
+	if !deleting {
+		utils.ServerError(res, errors.New("we have problem on server!"))
+		return
+	}
+
+	jsonTmp := make(map[string]interface{})
+
+	jsonTmp["status"] = 200
+	jsonTmp["msg"] = "reservation deleted!"
+
+	toJson, err := json.Marshal(jsonTmp)
+	if err != nil {
+		utils.ServerError(res, errors.New("we have problem on server!"))
+		return
+	}
+
+	res.Header().Add("Content-Type", "application/json; charset=utf8")
+	res.Write(toJson)
+}

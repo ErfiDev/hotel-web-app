@@ -431,3 +431,20 @@ func (psdb postgresDbRepo) UpdateReservation(res models.Reservation) (bool, erro
 
 	return true, err
 }
+
+func (psdb postgresDbRepo) DeleteReservation(id int) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `
+	delete from reservations
+	where id = $1
+	`
+
+	_, err := psdb.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
