@@ -43,6 +43,7 @@ func Routes() http.Handler {
 		// mux.Use(Authenticate)
 		mux.Get("/dashboard", controllers.Repo.AdminDashboard)
 		mux.Get("/reservations", controllers.Repo.AdminReservations)
+		mux.Get("/newReservations", controllers.Repo.NewReservations)
 	})
 
 	// POST routes

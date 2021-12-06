@@ -517,3 +517,21 @@ func (r Repository) AdminReservations(res http.ResponseWriter, req *http.Request
 		Data: data,
 	})
 }
+
+func (r Repository) NewReservations(res http.ResponseWriter, req *http.Request) {
+	reservations, err := r.DB.AllNewReservations()
+	if err != nil {
+		utils.ServerError(res, err)
+		return
+	}
+
+	data := make(map[string]interface{})
+	data["reservations"] = reservations
+	data["title"] = "New reservations"
+	data["path"] = "/newReservations"
+
+	utils.RenderTemplate(res, req, "admin-newReservations.page.gohtml", &models.TmpData{
+		Data: data,
+	})
+
+}

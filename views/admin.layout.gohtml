@@ -35,6 +35,15 @@
                                     <a href="/admin/reservations">Reservations</a>
                                 </li>
                             {{end}}
+                            {{if eq $path "/newReservations"}}
+                                <li class="admin-sidebar-item used">
+                                    <a href="/admin/newReservations">New Reservations</a>
+                                </li>
+                            {{else}}
+                                <li class="admin-sidebar-item">
+                                    <a href="/admin/newReservations">New Reservations</a>
+                                </li>
+                            {{end}}
                             {{if eq $path "/admins"}}
                                 <li class="admin-sidebar-item used">
                                     <a href="/admin/admins">Admins</a>
