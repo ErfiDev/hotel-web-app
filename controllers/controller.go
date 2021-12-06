@@ -535,3 +535,7 @@ func (r Repository) NewReservations(res http.ResponseWriter, req *http.Request) 
 	})
 
 }
+
+func (r Repository) Admin(res http.ResponseWriter, req *http.Request) {
+	http.Redirect(res, req, "/admin/dashboard", http.StatusSeeOther)
+}
