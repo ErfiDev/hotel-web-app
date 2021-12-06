@@ -361,3 +361,49 @@ func (psdb postgresDbRepo) GetReservationById(id int) (models.Reservation, error
 
 	return res, nil
 }
+
+func (psdb postgresDbRepo) AllNewReservations() ([]models.Reservation, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `
+  	select r.id, r.start_date, r.end_date , r.email ,
+	r.first_name , r.last_name , r.phone , r.created_at,
+	r.updated_at , rm.room_name , rm.id
+	from reservations r
+	left join rooms rm on (r.room_id = rm.id) 
+	where processed = 0
+	order by r.start_date asc;
+	`
+
+	var reservations []models.Reservation
+
+	rows, err := psdb.DB.QueryContext(ctx, query)
+	defer rows.Close()
+	if err != nil {
+		return reservations, err
+	}
+
+	for rows.Next() {
+		res := models.Reservation{}
+		err := rows.Scan(
+			&res.ID,
+			&res.StartDate,
+			&res.EndDate,
+			&res.Email,
+			&res.FirstName,
+			&res.LastName,
+			&res.Phone,
+			&res.CreatedAt,
+			&res.UpdatedAt,
+			&res.Room.RoomName,
+			&res.RoomId,
+		)
+		if err != nil {
+			return reservations, err
+		}
+		reservations = append(reservations, res)
+	}
+
+	return reservations, nil
+}

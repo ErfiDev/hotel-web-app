@@ -18,4 +18,5 @@ type DatabaseRepository interface {
 	UpdateUser(user models.User) (bool, error)
 	AllReservations() ([]models.Reservation, error)
 	GetReservationById(id int) (models.Reservation, error)
+	AllNewReservations() ([]models.Reservation, error)
 }
