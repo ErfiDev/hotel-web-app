@@ -615,17 +615,7 @@ func (r Repository) ApiUpdateReservation(res http.ResponseWriter, req *http.Requ
 			return
 		}
 
-		allRes, errGetAllRes := r.DB.AllReservations()
-		if errGetAllRes != nil {
-			utils.ServerError(res, errGetAllRes)
-			return
-		}
-		data["reservations"] = allRes
-		data["title"] = "Update reservation"
-		data["path"] = "/reservations"
 		r.App.Session.Put(req.Context(), "flash", "update reservation success!")
-		utils.RenderTemplate(res, req, "admin-reservations.page.gohtml", &models.TmpData{
-			Data: data,
-		})
+		http.Redirect(res, req, "/admin/reservations", http.StatusSeeOther)
 	}
 }
