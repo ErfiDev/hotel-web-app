@@ -1,0 +1,58 @@
+{{template "admin" .}}
+
+{{define "adminsubpage"}}
+    <div class="admin-single-res">
+        {{$res := index .Data "reservation"}}
+        <form action="/admin/api/updateReservation" method="POST" class="admin-single-res-form">
+            <input type="text" hidden name="csrf_token" value="{{.CSRF}}" />
+            <input name="id" value="{{.Data.id}}" hidden />
+
+            <div class="form-group mt-3">
+                <label for="email">Email:</label>
+                {{with .Form.Errors.Get "email"}}
+                    <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input class="form-control {{with .Form.Errors.Get "email"}} is-invalid  {{end}}" id="email"
+                       autocomplete="off" type='email'
+                       name='email' value="{{with $res.Email}}{{.}}{{end}}">
+            </div>
+            <div class="form-group mt-3">
+                <label for="first_name">firstname:</label>
+                {{with .Form.Errors.Get "first_name"}}
+                    <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid  {{end}}" id="first_name"
+                       autocomplete="off" type='first_name'
+                       name='first_name' value="{{with $res.FirstName}}{{.}}{{end}}">
+            </div>
+            <div class="form-group mt-3">
+                <label for="last_name">lastname:</label>
+                {{with .Form.Errors.Get "last_name"}}
+                    <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input class="form-control {{with .Form.Errors.Get "last_name"}} is-invalid  {{end}}" id="last_name"
+                       autocomplete="off" type='last_name'
+                       name='last_name' value="{{with $res.LastName}}{{.}}{{end}}">
+            </div>
+            <div class="form-group mt-3">
+                <label for="phone">phone:</label>
+                {{with .Form.Errors.Get "phone"}}
+                    <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input class="form-control {{with .Form.Errors.Get "phone"}} is-invalid  {{end}}" id="phone"
+                       autocomplete="off" type='phone'
+                       name='phone' value="{{with $res.Phone}}{{.}}{{end}}">
+            </div>
+
+            <button class="btn btn-primary" type="submit">Update Reservation</button>
+            <button class="cancel-update-res">Cancel</button>
+        </form>
+    </div>
+    <script defer>
+        const cancelBtn = document.querySelector(".cancel-update-res")
+
+        cancelBtn.addEventListener("click" , ()=> {
+            window.location.replace("http://localhost:3000/admin/reservations")
+        })
+    </script>
+{{end}}

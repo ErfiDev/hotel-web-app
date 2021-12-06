@@ -128,3 +128,9 @@ body {
 .dataTable-wrapper {
     width: 100%;
 }
+
+.admin-single-res {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

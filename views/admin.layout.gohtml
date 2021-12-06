@@ -72,5 +72,35 @@
                 </div>
             </section>
         </body>
+        <script defer >
+            function Notify(msg = "" , icon = "info"){
+                const toast = Swal.mixin({
+                    toast: true,
+                    title: msg,
+                    icon: icon,
+                    position: "bottom-right",
+                    showConfirmButton: false,
+                    timer: 6000,
+                    timerProgressBar: true,
+                    didOpen: (toast)=> {
+                        toast.addEventListener("mouseenter" , Swal.stopTimer)
+                        toast.addEventListener("mouseleave" , Swal.resumeTimer)
+                    }
+                })
+                toast.fire({})
+            }
+
+            {{with .Error}}
+                    Notify("{{.}}" , "error")
+            {{end}}
+
+            {{with .Flash}}
+                Notify("{{.}}" , "success")
+            {{end}}
+
+            {{with .Warning}}
+                Notify("{{.}}" , "warning")
+            {{end}}
+        </script>
     </html>
 {{end}}

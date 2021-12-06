@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -538,4 +540,92 @@ func (r Repository) NewReservations(res http.ResponseWriter, req *http.Request) 
 
 func (r Repository) Admin(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/admin/dashboard", http.StatusSeeOther)
+}
+
+func (r Repository) SingleReservation(res http.ResponseWriter, req *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(req, "id"))
+	if err != nil {
+		utils.ServerError(res, err)
+		return
+	}
+
+	getReservation, errDb := r.DB.GetReservationById(id)
+	if errDb != nil {
+		utils.ServerError(res, errDb)
+		return
+	}
+
+	data := make(map[string]interface{})
+	data["reservation"] = getReservation
+	data["title"] = fmt.Sprintf("%s Reservation", getReservation.Email)
+	data["path"] = "/reservations"
+	data["id"] = id
+
+	utils.RenderTemplate(res, req, "admin-single-res.page.gohtml", &models.TmpData{
+		Data: data,
+		Form: forms.New(nil),
+	})
+}
+
+func (r Repository) ApiUpdateReservation(res http.ResponseWriter, req *http.Request) {
+	err := req.ParseForm()
+	if err != nil {
+		utils.ServerError(res, err)
+		return
+	}
+
+	form := forms.New(req.PostForm)
+
+	form.Has("email", req)
+	form.Has("first_name", req)
+	form.Has("last_name", req)
+	form.Has("phone", req)
+
+	idInt, _ := strconv.Atoi(req.Form.Get("id"))
+	reservation := models.Reservation{
+		Email:     req.Form.Get("email"),
+		FirstName: req.Form.Get("first_name"),
+		LastName:  req.Form.Get("last_name"),
+		Phone:     req.Form.Get("phone"),
+		ID:        idInt,
+	}
+
+	data := make(map[string]interface{})
+
+	if !form.Valid() {
+		data["reservation"] = reservation
+		data["title"] = "Update reservation"
+		data["path"] = "/reservations"
+
+		r.App.Session.Put(req.Context(), "error", "please fill correct input value!")
+		utils.RenderTemplate(res, req, "admin-single-res.page.gohtml", &models.TmpData{
+			Data: data,
+			Form: form,
+		})
+		return
+	}
+
+	result, errDb := r.DB.UpdateReservation(reservation)
+	if errDb != nil {
+		utils.ServerError(res, errDb)
+		return
+	} else {
+		if !result {
+			utils.ServerError(res, errors.New("we have problem on server!"))
+			return
+		}
+
+		allRes, errGetAllRes := r.DB.AllReservations()
+		if errGetAllRes != nil {
+			utils.ServerError(res, errGetAllRes)
+			return
+		}
+		data["reservations"] = allRes
+		data["title"] = "Update reservation"
+		data["path"] = "/reservations"
+		r.App.Session.Put(req.Context(), "flash", "update reservation success!")
+		utils.RenderTemplate(res, req, "admin-reservations.page.gohtml", &models.TmpData{
+			Data: data,
+		})
+	}
 }

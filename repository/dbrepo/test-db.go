@@ -69,3 +69,7 @@ func (psdb testDbRepo) GetReservationById(id int) (models.Reservation, error) {
 func (psdb testDbRepo) AllNewReservations() ([]models.Reservation, error) {
 	return []models.Reservation{}, nil
 }
+
+func (psdb testDbRepo) UpdateReservation(res models.Reservation) (bool, error) {
+	return true, nil
+}
