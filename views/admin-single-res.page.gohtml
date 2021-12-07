@@ -45,13 +45,16 @@
             </div>
 
             <button class="btn btn-primary mt-5" type="submit">Update Reservation</button>
-            <button class="cancel-update-res mt-5 btn btn-secondary" type="button">Cancel</button>
+            <button class="btn-mark-as-processed mt-5 btn btn-success" type="button">Mark as Complete</button>
             <button class="btn-delete-reservation mt-5 btn btn-danger" type="button">Delete reservation</button>
+            <br />
+            <button class="cancel-update-res mt-1 btn btn-secondary" type="button">Cancel</button>
         </form>
     </div>
     <script defer>
-        const cancelBtn = document.querySelector(".cancel-update-res")
-        const deleteBtn = document.querySelector(".btn-delete-reservation")
+        const cancelBtn = document.querySelector(".cancel-update-res");
+        const deleteBtn = document.querySelector(".btn-delete-reservation");
+        const completeBtn = document.querySelector(".btn-mark-as-processed");
 
         cancelBtn.addEventListener("click" , ()=> {
             window.location.replace("http://localhost:3000/admin/reservations")
@@ -74,11 +77,35 @@
                     } , 2000);
                     return
                 } else {
-                Notify("we have problem on server" , "error")
+                    Notify("we have problem on server" , "error")
                 }
             }).catch(err => {
                 Notify("we have problem on server" , "error")
             })
+        });
+
+        completeBtn.addEventListener("click" , ()=> {
+            let formData = new FormData();
+            formData.append("csrf_token" , {{.CSRF}});
+            formData.append("id" , {{.Data.id}});
+
+            fetch("/admin/api/completeReservation" , {
+                method: "POST",
+                body: formData
+            }).then(res => res.json())
+            .then(json => {
+                if (json.status === 200) {
+                    Notify(json.msg , "success")
+                    setTimeout(()=> {
+                        window.location.replace("http://localhost:3000/admin/reservations")
+                    } , 2000);
+                    return
+                } else {
+                    Notify("we have problem on server" , "error")
+                }
+            }).catch(err => {
+                Notify("we have problem on server" , "error")
+            });
         });
     </script>
 {{end}}

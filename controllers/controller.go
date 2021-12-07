@@ -643,3 +643,39 @@ func (r Repository) DeleteReservation(res http.ResponseWriter, req *http.Request
 	res.Header().Add("Content-Type", "application/json; charset=utf8")
 	res.Write(toJson)
 }
+
+func (r Repository) CompleteReservation(res http.ResponseWriter, req *http.Request) {
+	id, err := strconv.Atoi(req.Form.Get("id"))
+	if err != nil {
+		utils.ServerError(res, err)
+		return
+	}
+
+	jsonTmp := make(map[string]interface{})
+
+	result, _ := r.DB.CompleteReservation(id)
+	if !result {
+		jsonTmp["status"] = http.StatusConflict
+		jsonTmp["msg"] = "we have problem in server!"
+
+		toJson, err := json.Marshal(jsonTmp)
+		if err != nil {
+			utils.ServerError(res, err)
+			return
+		}
+
+		res.Header().Add("Content-Type", "application/json; charset=utf8")
+		res.Write(toJson)
+	} else {
+		jsonTmp["status"] = 200
+		jsonTmp["msg"] = "reservation processed complete!"
+		toJson, err := json.Marshal(jsonTmp)
+		if err != nil {
+			utils.ServerError(res, err)
+			return
+		}
+
+		res.Header().Add("Content-Type", "application/json; charset=utf8")
+		res.Write(toJson)
+	}
+}

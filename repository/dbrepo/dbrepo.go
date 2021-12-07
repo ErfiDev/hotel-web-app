@@ -448,3 +448,18 @@ func (psdb postgresDbRepo) DeleteReservation(id int) (bool, error) {
 
 	return true, nil
 }
+
+func (psdb postgresDbRepo) CompleteReservation(id int) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `update reservations set processed = 1
+	where id = $1;`
+
+	_, err := psdb.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}

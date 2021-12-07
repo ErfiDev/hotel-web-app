@@ -77,3 +77,7 @@ func (psdb testDbRepo) UpdateReservation(res models.Reservation) (bool, error) {
 func (psdb testDbRepo) DeleteReservation(id int) (bool, error) {
 	return true, nil
 }
+
+func (psdb testDbRepo) CompleteReservation(id int) (bool, error) {
+	return true, nil
+}
