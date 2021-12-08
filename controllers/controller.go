@@ -679,3 +679,41 @@ func (r Repository) CompleteReservation(res http.ResponseWriter, req *http.Reque
 		res.Write(toJson)
 	}
 }
+
+func (r Repository) AdminReservationCelender(res http.ResponseWriter, req *http.Request) {
+	now := time.Now()
+
+	if req.URL.Query().Get("y") != "" && req.URL.Query().Get("m") != "" {
+		year, _ := strconv.Atoi(req.URL.Query().Get("y"))
+		month, _ := strconv.Atoi(req.URL.Query().Get("m"))
+		now = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+
+		next := now.AddDate(0, 1, 0)
+		last := now.AddDate(0, -1, 0)
+
+		nextMonth := next.Format("01")
+		nextYear := next.Format("2006")
+		lastMonth := last.Format("01")
+		lastYear := last.Format("2006")
+
+		stringMap := make(map[string]string)
+
+		stringMap["next_month"] = nextMonth
+		stringMap["next_year"] = nextYear
+		stringMap["last_month"] = lastMonth
+		stringMap["last_year"] = lastYear
+		stringMap["now_month"] = now.Format("01")
+		stringMap["now_year"] = now.Format("2006")
+
+		data := make(map[string]interface{})
+		data["title"] = "Reservations Celender"
+		data["path"] = "/reservation"
+
+		utils.RenderTemplate(res, req, "admin-res-celender.page.gohtml", &models.TmpData{
+			StringMap: stringMap,
+			Data:      data,
+		})
+	} else {
+		http.Redirect(res, req, "/admin/dashboard", http.StatusSeeOther)
+	}
+}
