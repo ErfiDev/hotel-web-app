@@ -11,7 +11,25 @@
             <a href="/admin/reservations-celendar?y={{index $sm "next_year"}}&m={{index $sm "next_month"}}">Next Month{{" >"}}</a>
         </div>
         <div class="reservation-celendar-main">
-            
+            {{index $sm "now_month"}}
         </div>
     </div>
+    <script defer>
+        function InitCelendar() {
+        const parentElm = document.querySelector(".reservation-celendar-main");
+        
+        let year = {{index $sm "now_year"}};
+        let month = {{index $sm "now_month"}};
+        let daysInMonth = new Date(year , month , 0).getDate();
+
+            for (let i = 0; i < daysInMonth + 1; i++) {
+                let child = document.createElement("div");
+                child.classList.add("celendar-child");
+                child.innerHTML = i;
+                parentElm.appendChild(child);
+            }
+        }
+
+        InitCelendar();
+    </script>
 {{end}}

@@ -151,3 +151,16 @@ body {
 .reservation-celendar-top a {
     cursor: pointer;
 }
+
+.reservation-celendar-main {
+    width: 100%;
+    min-height: 50vh;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-auto-rows: auto;
+    gap: 4px;
+}
+.celendar-child {
+    border: 2px black solid;
+}
