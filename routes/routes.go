@@ -46,7 +46,7 @@ func Routes() http.Handler {
 		mux.Get("/reservations", controllers.Repo.AdminReservations)
 		mux.Get("/newReservations", controllers.Repo.NewReservations)
 		mux.Get("/reservation/{id}", controllers.Repo.SingleReservation)
-		mux.Get("/reservations-celender", controllers.Repo.AdminReservationCelender)
+		mux.Get("/reservations-celendar", controllers.Repo.AdminReservationCelendar)
 		mux.Post("/api/updateReservation", controllers.Repo.ApiUpdateReservation)
 		mux.Post("/api/deleteReservation", controllers.Repo.DeleteReservation)
 		mux.Post("/api/completeReservation", controllers.Repo.CompleteReservation)

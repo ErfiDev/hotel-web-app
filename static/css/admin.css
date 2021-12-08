@@ -134,3 +134,20 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.admin-reservation-celendar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.reservation-celendar-top {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    gap: 10vw;
+}
+.reservation-celendar-top a {
+    cursor: pointer;
+}

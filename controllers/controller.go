@@ -680,8 +680,11 @@ func (r Repository) CompleteReservation(res http.ResponseWriter, req *http.Reque
 	}
 }
 
-func (r Repository) AdminReservationCelender(res http.ResponseWriter, req *http.Request) {
+func (r Repository) AdminReservationCelendar(res http.ResponseWriter, req *http.Request) {
 	now := time.Now()
+
+	stringMap := make(map[string]string)
+	data := make(map[string]interface{})
 
 	if req.URL.Query().Get("y") != "" && req.URL.Query().Get("m") != "" {
 		year, _ := strconv.Atoi(req.URL.Query().Get("y"))
@@ -696,8 +699,6 @@ func (r Repository) AdminReservationCelender(res http.ResponseWriter, req *http.
 		lastMonth := last.Format("01")
 		lastYear := last.Format("2006")
 
-		stringMap := make(map[string]string)
-
 		stringMap["next_month"] = nextMonth
 		stringMap["next_year"] = nextYear
 		stringMap["last_month"] = lastMonth
@@ -705,15 +706,34 @@ func (r Repository) AdminReservationCelender(res http.ResponseWriter, req *http.
 		stringMap["now_month"] = now.Format("01")
 		stringMap["now_year"] = now.Format("2006")
 
-		data := make(map[string]interface{})
-		data["title"] = "Reservations Celender"
-		data["path"] = "/reservation"
+		data["title"] = "Reservations Celendar"
+		data["path"] = "/reservation-celendar"
 
-		utils.RenderTemplate(res, req, "admin-res-celender.page.gohtml", &models.TmpData{
+		utils.RenderTemplate(res, req, "admin-res-celendar.page.gohtml", &models.TmpData{
 			StringMap: stringMap,
 			Data:      data,
 		})
 	} else {
-		http.Redirect(res, req, "/admin/dashboard", http.StatusSeeOther)
+		next := now.AddDate(0, 1, 0)
+		last := now.AddDate(0, -1, 0)
+
+		nextMonth := next.Format("01")
+		nextYear := next.Format("2006")
+		lastMonth := last.Format("01")
+		lastYear := last.Format("2006")
+
+		stringMap["next_month"] = nextMonth
+		stringMap["next_year"] = nextYear
+		stringMap["last_month"] = lastMonth
+		stringMap["last_year"] = lastYear
+		stringMap["now_year"] = now.Format("2006")
+		stringMap["now_month"] = now.Format("01")
+		data["title"] = "Reservations Celendar"
+		data["path"] = "/reservations-celendar"
+
+		utils.RenderTemplate(res, req, "admin-res-celendar.page.gohtml", &models.TmpData{
+			StringMap: stringMap,
+			Data:      data,
+		})
 	}
 }

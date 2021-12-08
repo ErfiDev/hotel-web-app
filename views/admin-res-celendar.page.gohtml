@@ -1,0 +1,17 @@
+{{template "admin" .}}
+
+{{define "adminsubpage"}}
+    <div class="admin-reservation-celendar">
+        {{$sm := .StringMap}}
+        <div class="reservation-celendar-top">
+            <a href="/admin/reservations-celendar?y={{index $sm "last_year"}}&m={{index $sm "last_month"}}">{{"< "}}Last Month</a>
+            <h1>
+                {{$sm.now_year}} - {{$sm.now_month}}
+            </h1>
+            <a href="/admin/reservations-celendar?y={{index $sm "next_year"}}&m={{index $sm "next_month"}}">Next Month{{" >"}}</a>
+        </div>
+        <div class="reservation-celendar-main">
+            
+        </div>
+    </div>
+{{end}}
