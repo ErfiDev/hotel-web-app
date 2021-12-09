@@ -463,3 +463,42 @@ func (psdb postgresDbRepo) CompleteReservation(id int) (bool, error) {
 
 	return true, nil
 }
+
+func (psdb postgresDbRepo) GetReservationsBetweemMonth(start, end time.Time) ([]models.Reservation, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `select * from reservations
+	where end_date > $1 and start_date < $2`
+
+	sd := start.Format("2006-01-02")
+	ed := end.Format("2006-01-02")
+
+	var reservations []models.Reservation
+
+	rows, err := psdb.DB.QueryContext(ctx, query, sd, ed)
+	if err != nil {
+		return reservations, err
+	}
+
+	for rows.Next() {
+		res := models.Reservation{}
+
+		rows.Scan(
+			&res.ID,
+			&res.FirstName,
+			&res.LastName,
+			&res.Email,
+			&res.Phone,
+			&res.StartDate,
+			&res.EndDate,
+			&res.RoomId,
+			&res.CreatedAt,
+			&res.UpdatedAt,
+		)
+
+		reservations = append(reservations, res)
+	}
+
+	return reservations, nil
+}

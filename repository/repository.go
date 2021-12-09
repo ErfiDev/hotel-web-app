@@ -22,4 +22,5 @@ type DatabaseRepository interface {
 	UpdateReservation(models.Reservation) (bool, error)
 	DeleteReservation(id int) (bool, error)
 	CompleteReservation(id int) (bool, error)
+	GetReservationsBetweemMonth(start, end time.Time) ([]models.Reservation, error)
 }

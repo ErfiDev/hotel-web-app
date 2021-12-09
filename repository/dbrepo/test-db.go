@@ -81,3 +81,7 @@ func (psdb testDbRepo) DeleteReservation(id int) (bool, error) {
 func (psdb testDbRepo) CompleteReservation(id int) (bool, error) {
 	return true, nil
 }
+
+func (psdb testDbRepo) GetReservationsBetweemMonth(start, end time.Time) ([]models.Reservation, error) {
+	return []models.Reservation{}, nil
+}
