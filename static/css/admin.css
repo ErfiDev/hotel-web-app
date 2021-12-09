@@ -160,6 +160,8 @@ body {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-auto-rows: auto;
     gap: 4px;
+    padding: 5px;
+    margin: 5vh 0 0 0;
 }
 .celendar-child {
     border: 2px black solid;

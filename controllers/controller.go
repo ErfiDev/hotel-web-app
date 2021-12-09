@@ -709,6 +709,16 @@ func (r Repository) AdminReservationCelendar(res http.ResponseWriter, req *http.
 		data["title"] = "Reservations Celendar"
 		data["path"] = "/reservation-celendar"
 
+		startMonth := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+		EndMonth := startMonth.AddDate(0, 1, 0)
+		getResByMonth, err := r.DB.GetReservationsBetweemMonth(startMonth, EndMonth)
+		if err != nil {
+			utils.ServerError(res, err)
+			return
+		}
+
+		data["reservations"] = getResByMonth
+
 		utils.RenderTemplate(res, req, "admin-res-celendar.page.gohtml", &models.TmpData{
 			StringMap: stringMap,
 			Data:      data,
@@ -730,6 +740,16 @@ func (r Repository) AdminReservationCelendar(res http.ResponseWriter, req *http.
 		stringMap["now_month"] = now.Format("01")
 		data["title"] = "Reservations Celendar"
 		data["path"] = "/reservations-celendar"
+
+		startMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC)
+		EndMonth := startMonth.AddDate(0, 1, 0)
+		getResByMonth, err := r.DB.GetReservationsBetweemMonth(startMonth, EndMonth)
+		if err != nil {
+			utils.ServerError(res, err)
+			return
+		}
+
+		data["reservations"] = getResByMonth
 
 		utils.RenderTemplate(res, req, "admin-res-celendar.page.gohtml", &models.TmpData{
 			StringMap: stringMap,

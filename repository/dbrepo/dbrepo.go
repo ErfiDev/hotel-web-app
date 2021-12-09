@@ -468,7 +468,9 @@ func (psdb postgresDbRepo) GetReservationsBetweemMonth(start, end time.Time) ([]
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `select * from reservations
+	query := `select id, first_name, last_name, email,
+	phone, start_date, end_date, room_id, created_at, updated_at
+	from reservations
 	where end_date > $1 and start_date < $2`
 
 	sd := start.Format("2006-01-02")
@@ -499,6 +501,5 @@ func (psdb postgresDbRepo) GetReservationsBetweemMonth(start, end time.Time) ([]
 
 		reservations = append(reservations, res)
 	}
-
 	return reservations, nil
 }
