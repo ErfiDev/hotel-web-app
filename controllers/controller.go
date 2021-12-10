@@ -717,7 +717,14 @@ func (r Repository) AdminReservationCelendar(res http.ResponseWriter, req *http.
 			return
 		}
 
-		data["reservations"] = getResByMonth
+		timeBetweens := utils.ReturnBetweenDates(getResByMonth)
+		toHumanTimeSlice := []string{}
+		for _, value := range timeBetweens {
+			humanTime := value.Format("02")
+			toHumanTimeSlice = append(toHumanTimeSlice, humanTime)
+		}
+		removeDuplicate := utils.DeleteDuplicateValues(toHumanTimeSlice)
+		data["times"] = removeDuplicate
 
 		utils.RenderTemplate(res, req, "admin-res-celendar.page.gohtml", &models.TmpData{
 			StringMap: stringMap,
@@ -749,7 +756,6 @@ func (r Repository) AdminReservationCelendar(res http.ResponseWriter, req *http.
 			return
 		}
 
-		data["reservations"] = getResByMonth
 		timeBetweens := utils.ReturnBetweenDates(getResByMonth)
 		toHumanTimeSlice := []string{}
 		for _, value := range timeBetweens {

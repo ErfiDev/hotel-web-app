@@ -14,10 +14,6 @@
 
         </div>
 
-        {{range $index , $value := index .Data "reservations"}}
-            {{$value.FirstName}}
-        {{end}}
-
         {{range $index , $value := index .Data "times"}}
             {{$value}}
         {{end}}
@@ -33,7 +29,11 @@
             for (let i = 1; i < daysInMonth+1; i++) {
                 let child = document.createElement("div");
                 child.classList.add("celendar-child");
-                child.innerHTML = i;
+                if (i < 10) {
+                    child.innerHTML = `0${i}`;
+                } else {
+                    child.innerHTML = i;
+                }
                 parentElm.appendChild(child);
             }
         }
