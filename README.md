@@ -30,11 +30,11 @@ then see the .yml.example file and create database.yml file and set all neccesar
 
 developer: erfanhanifezade@gmail.com
 
-go programming language and std libraries
-scs, nosurf and godotenv pkg
-postgresql database
-soda cli tool
-pgx connection for postgresql connection
+<p>go programming language and std libraries</p>
+<p>scs, nosurf and godotenv pkg</p>
+<p>postgresql database</p>
+<p>soda cli tool</p>
+<p>pgx connection for postgresql connection</p>
 
 ### Contribute Section
 
