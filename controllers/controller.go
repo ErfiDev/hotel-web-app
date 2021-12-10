@@ -128,20 +128,17 @@ func (r Repository) MakeReservation(res http.ResponseWriter, req *http.Request) 
 
 	r.App.Session.Put(req.Context(), "reservation", reservation)
 
-	StringMap := map[string]string{
-		"startDate": st,
-		"endDate":   ed,
-	}
 	Data := map[string]interface{}{
 		"title":       "make reservation",
 		"path":        "/book-now",
 		"reservation": reservation,
+		"startDate":   st,
+		"endDate":     ed,
 	}
 
 	utils.RenderTemplate(res, req, "make-reservation.page.gohtml", &models.TmpData{
-		Data:      Data,
-		Form:      forms.New(nil),
-		StringMap: StringMap,
+		Data: Data,
+		Form: forms.New(nil),
 	})
 }
 

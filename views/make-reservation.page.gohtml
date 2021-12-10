@@ -4,8 +4,8 @@
     <section class="w-100" style="display: flex;flex-direction: column;justify-content: center;align-items: center">
         <p class="mt-5 mb-5">
             room:{{.Data.reservation.Room.RoomName}}<br>
-            arrival: {{.StringMap.startDate}}<br>
-            departure: {{.StringMap.endDate}}<br>
+            arrival: {{.Data.reservation.StartDate}}<br>
+            departure: {{.Data.reservation.EndDate}}<br>
         </p>
         <form action="/make-reservation" method="POST" class="make-reservation-form">
             {{$res := index .Data "reservation"}}
