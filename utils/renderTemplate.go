@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -14,7 +15,8 @@ import (
 )
 
 var funcMap = template.FuncMap{
-	"ToHumanDate": ToHumanDate,
+	"ToHumanDate":    ToHumanDate,
+	"GetDayFromDate": GetDayFromDate,
 }
 
 var appConfig *config.AppConfig
@@ -25,6 +27,13 @@ func GetAppConfig(a *config.AppConfig) {
 
 func ToHumanDate(t time.Time) string {
 	return t.Format("2006-01-02")
+}
+
+func GetDayFromDate(t time.Time) int {
+	getDay := t.Format("02")
+	toInt, _ := strconv.Atoi(getDay)
+
+	return toInt
 }
 
 func AddDefaultData(tmpData *models.TmpData, req *http.Request) *models.TmpData {

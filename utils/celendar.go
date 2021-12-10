@@ -32,3 +32,17 @@ func ReturnBetweenDates(reservations []models.Reservation) []time.Time {
 
 	return timeSlice
 }
+
+func DeleteDuplicateValues(slice []string) []string {
+	keys := make(map[string]bool)
+	removedSlice := []string{}
+
+	for _, entry := range slice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			removedSlice = append(removedSlice, entry)
+		}
+	}
+
+	return removedSlice
+}

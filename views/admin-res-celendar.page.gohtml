@@ -19,7 +19,7 @@
         {{end}}
 
         {{range $index , $value := index .Data "times"}}
-            {{ToHumanDate $value}}
+            {{$value}}
         {{end}}
     </div>
     <script defer>
