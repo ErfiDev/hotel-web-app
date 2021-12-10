@@ -2,7 +2,12 @@ package main
 
 import (
 	"encoding/gob"
+	"flag"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/alexedwards/scs/v2"
 	"github.com/erfidev/hotel-web-app/config"
 	"github.com/erfidev/hotel-web-app/controllers"
@@ -11,9 +16,6 @@ import (
 	"github.com/erfidev/hotel-web-app/routes"
 	"github.com/erfidev/hotel-web-app/utils"
 	"github.com/joho/godotenv"
-	"log"
-	"net/http"
-	"os"
 )
 
 // Global variables
@@ -25,7 +27,7 @@ var ErrorLog *log.Logger
 func main() {
 	_ = godotenv.Load()
 
-	db , err := InitProject()
+	db, err := InitProject()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,7 +38,7 @@ func main() {
 
 	routeHandler := routes.Routes()
 	webServer := &http.Server{
-		Addr: ":3000",
+		Addr:    ":3000",
 		Handler: routeHandler,
 	}
 
@@ -47,7 +49,7 @@ func main() {
 	}
 }
 
-func InitProject() (*driver.DB , error) {
+func InitProject() (*driver.DB, error) {
 	// Register value and type into encoding/Gob .Register()
 	gob.Register(models.Reservation{})
 	gob.Register(models.Room{})
@@ -56,11 +58,25 @@ func InitProject() (*driver.DB , error) {
 	gob.Register(models.Restriction{})
 	gob.Register(models.User{})
 
+	dbHost := flag.String("dbhost", "localhost", "Database host")
+	dbName := flag.String("dbname", "", "Database name")
+	dbPass := flag.String("dbpass", "", "Database password")
+	dbUser := flag.String("dbuser", "", "Database user")
+	dbPort := flag.String("dbport", "", "Database port")
+	dbSsl := flag.String("dbssl", "disable", "Database ssl")
+
+	flag.Parse()
+
+	if *dbUser == "" || *dbName == "" {
+		fmt.Println("Missing required flags!")
+		os.Exit(1)
+	}
+
 	mailChannel := make(chan models.MailData)
 	appConfig.MailChan = mailChannel
 
 	// create template caches
-	tmpCache , errCache := utils.CreateTemplateCache()
+	tmpCache, errCache := utils.CreateTemplateCache()
 	if errCache != nil {
 		log.Fatal("can't create template cache")
 	}
@@ -68,8 +84,8 @@ func InitProject() (*driver.DB , error) {
 	// init AppConfig tmpCache
 	appConfig.TemplatesCache = tmpCache
 
-	InfoLog = log.New(os.Stdout , "INFO\t" , log.Ldate|log.Ltime)
-	ErrorLog = log.New(os.Stdout , "ERROR\t" , log.Ldate|log.Ltime|log.Lshortfile)
+	InfoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	ErrorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	appConfig.ErrorLog = ErrorLog
 	appConfig.InfoLog = InfoLog
@@ -93,14 +109,15 @@ func InitProject() (*driver.DB , error) {
 
 	// Connecting to database
 	log.Println("Connecting to database...")
-	db , err := driver.ConnectDB(`host=localhost port=5432 dbname=hotel user=postgres password=28963323`)
+	connectionStr := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", *dbHost, *dbPort, *dbName, *dbUser, *dbPass, *dbSsl)
+	db, err := driver.ConnectDB(connectionStr)
 	if err != nil {
-		return nil , err
+		return nil, err
 	}
 
 	utils.GetAppConfig(&appConfig)
-	controllers.SetRepo(controllers.NewRepository(&appConfig , db))
+	controllers.SetRepo(controllers.NewRepository(&appConfig, db))
 	routes.SetAppConfig(&appConfig)
 	// server initializing
-	return db , nil
+	return db, nil
 }
