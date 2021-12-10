@@ -39,5 +39,18 @@
         }
 
         InitCelendar();
+
+        function InitColors(daysArr) {
+            let allChilds = document.querySelectorAll(".celendar-child");
+            for (let x in daysArr) {
+                for (let child in allChilds) {
+                    if (allChilds[child].innerText === daysArr[x]) {
+                        allChilds[child].classList.add("celendar-reserved");
+                    }
+                }
+            }
+        } 
+
+        InitColors({{index .Data "times"}})
     </script>
 {{end}}

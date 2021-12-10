@@ -166,3 +166,7 @@ body {
 .celendar-child {
     border: 2px black solid;
 }
+
+.celendar-reserved {
+    background-color: rgb(2, 184, 2);
+}
