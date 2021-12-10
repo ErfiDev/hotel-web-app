@@ -40,7 +40,7 @@ func Routes() http.Handler {
 	router.Get("/login", controllers.Repo.Login)
 	router.Get("/logout", controllers.Repo.Logout)
 	router.Route("/admin", func(mux chi.Router) {
-		// mux.Use(Authenticate)
+		mux.Use(Authenticate)
 		mux.Get("/", controllers.Repo.Admin)
 		mux.Get("/dashboard", controllers.Repo.AdminDashboard)
 		mux.Get("/reservations", controllers.Repo.AdminReservations)
