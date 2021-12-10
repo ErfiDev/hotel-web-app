@@ -24,6 +24,7 @@ and CSRF token for authenticate POST method requests
 ### Enviroment variables
 
 if see the .env.example file you can see all neccesary variables and then create a .env file and set all of those
+then see the .yml.example file and create database.yml file and set all neccesary variables
 
 ### Created by
 
