@@ -750,6 +750,8 @@ func (r Repository) AdminReservationCelendar(res http.ResponseWriter, req *http.
 		}
 
 		data["reservations"] = getResByMonth
+		timeBetweens := utils.ReturnBetweenDates(getResByMonth)
+		data["times"] = timeBetweens
 
 		utils.RenderTemplate(res, req, "admin-res-celendar.page.gohtml", &models.TmpData{
 			StringMap: stringMap,

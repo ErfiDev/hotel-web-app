@@ -17,6 +17,10 @@
         {{range $index , $value := index .Data "reservations"}}
             {{$value.FirstName}}
         {{end}}
+
+        {{range $index , $value := index .Data "times"}}
+            {{ToHumanDate $value}}
+        {{end}}
     </div>
     <script defer>
         function InitCelendar() {
