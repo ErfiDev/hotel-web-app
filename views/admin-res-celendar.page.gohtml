@@ -13,10 +13,16 @@
         <div class="reservation-celendar-main">
 
         </div>
-
-        {{range $index , $value := index .Data "times"}}
-            {{$value}}
-        {{end}}
+        <div class="celendar-info"> 
+            <div class="celendar-info-container celendar-info-reserved">
+                <span class="span-color-container span-color-reserved">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                Reserved Days
+            </div>
+            <div class="celendar-info-container celendar-info-unreserved">
+                <span class="span-color-container span-color-unreserved">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                Unreserved Days
+            </div>
+        </div>
     </div>
     <script defer>
         function InitCelendar() {

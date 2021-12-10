@@ -170,3 +170,23 @@ body {
 .celendar-reserved {
     background-color: rgb(2, 184, 2);
 }
+
+.celendar-info {
+    display: flex;
+    gap: 2vw;
+    justify-content: center;
+    align-items: center;    
+}
+
+.span-color-container {
+    height: 8px;
+}
+
+.span-color-reserved {
+    background-color: rgb(2, 184, 2);
+}
+
+.span-color-unreserved {
+    background-color: white;
+    border: 1px solid black;
+}
