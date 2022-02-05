@@ -1,1 +1,1 @@
-go run cmd/web/mail.go cmd/web/main.go -dbname=hotel -dbuser=postgres -dbpass=28963323 -dbport=5432
+go run cmd/web/mail.go cmd/web/main.go -dbname= -dbuser= -dbpass= -dbport=
